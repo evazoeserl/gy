@@ -1,4 +1,4 @@
-const CACHE = 'greatyou-v1';
+const CACHE = 'greatyou-v4';
 const ASSETS = [
   '/gy/',
   '/gy/index.html',

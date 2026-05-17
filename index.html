@@ -654,6 +654,59 @@
   .ms-diff-badge.missed   { background: rgba(251,146,60,0.13); color: #fb923c; }
   .ms-diff-badge.pending  { background: rgba(192,132,252,0.1); color: #9b7dcc; font-size: 10px; }
   .ms-diff-badge.future   { background: rgba(255,255,255,0.04); color: #2e2546; font-size: 10px; }
+
+  .task-btn.done-yellow{background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.35)}
+  .check-circle.done-yellow{background:#fbbf24;border:none}
+  .task-sub.done-yellow{color:rgba(251,191,36,.8);opacity:1}
+  .day-edit-row.done-yellow{background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.35)}
+  .day-edit-check.done-yellow{background:#fbbf24;border:none}
+  body.light .task-btn.done-yellow{background:#fffbeb;border-color:rgba(251,191,36,.3)}
+  body.light .day-edit-row.done-yellow{background:#fffbeb;border-color:rgba(251,191,36,.3)}
+  .goal-add-btn{display:inline-flex;align-items:center;gap:6px;margin-top:16px;padding:9px 18px;border-radius:20px;background:transparent;border:1.5px dashed rgba(192,132,252,.35);color:#c084fc;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+  .goal-add-btn:hover{background:rgba(192,132,252,.08);border-style:solid}
+  body.light .goal-add-btn{color:#6d28d9;border-color:rgba(109,40,217,.25)}
+  .goal-edit-icon{margin-left:auto;font-size:20px;line-height:1;opacity:.85;padding:6px 8px;background:rgba(192,132,252,.15);border-radius:10px;cursor:pointer;transition:all .15s;color:#c084fc;flex-shrink:0;min-width:28px;text-align:center}
+  .goal-edit-icon:hover{opacity:1;background:rgba(192,132,252,.3)}.goal-edit-icon:active{transform:scale(.9)}
+  .goal-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:flex-end;justify-content:center;z-index:250;padding:0 16px 20px}
+  .goal-modal-overlay.open{display:flex}
+  .goal-modal{background:var(--modal-bg);border-radius:24px;padding:28px;width:100%;max-width:440px;border:1px solid rgba(192,132,252,.2);box-shadow:0 -8px 40px rgba(0,0,0,.4);max-height:85vh;overflow-y:auto}
+  .goal-modal-title{font-size:18px;font-weight:700;color:var(--text-strong);margin-bottom:14px}
+  .gm-field{margin-bottom:14px}
+  .gm-field label{display:block;font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+  .gm-field input,.gm-field select,.gm-field textarea{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--input-border);background:var(--input-bg);color:var(--text);font-size:14px;font-family:inherit;outline:none;resize:vertical}
+  .gm-field input:focus,.gm-field select:focus,.gm-field textarea:focus{border-color:#c084fc}
+  .gm-field textarea{min-height:60px}
+  .gm-field select option{color:#12082a;background:#fff}
+  .gm-type-row{display:flex;gap:8px;margin-bottom:12px}
+  .gm-type-btn{flex:1;padding:10px;border-radius:12px;border:1.5px solid var(--input-border);background:var(--input-bg);color:var(--text-muted);font-size:13px;font-weight:600;text-align:center;cursor:pointer;transition:.15s}
+  .gm-type-btn.sel{border-color:#c084fc;color:#c084fc;background:rgba(192,132,252,.08)}
+  .gm-actions{display:flex;gap:10px;margin-top:18px}
+  .gm-actions button{flex:1;padding:12px;border-radius:14px;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:.15s}
+  .gm-save{background:linear-gradient(135deg,#7e22ce,#4338ca);color:#fff;box-shadow:0 4px 20px rgba(126,34,206,.35)}
+  .gm-cancel{background:var(--surface3);border:1px solid var(--border)!important;color:var(--text-muted)}
+  .gm-delete{background:rgba(239,68,68,.12);color:#ef4444;border:1.5px solid rgba(239,68,68,.2)!important}
+  #train-cal-grid{grid-template-columns:repeat(7,1fr) 40px !important}
+  .cal-week-cell{display:flex;align-items:center;justify-content:center;border-radius:10px;min-height:36px;font-size:11px;font-weight:900;border:2px solid rgba(56,189,248,.45);background:rgba(56,189,248,.10);color:#38bdf8;}
+  .cal-week-cell.w-gruen{background:rgba(52,211,153,.35);color:#10b981;border-color:rgba(52,211,153,.65);}
+  .cal-week-cell.w-orange{background:rgba(251,191,36,.35);color:#f59e0b;border-color:rgba(251,191,36,.65);}
+  .cal-week-cell.w-rot{background:rgba(239,68,68,.32);color:#ef4444;border-color:rgba(239,68,68,.65);}
+  .cal-week-cell.w-empty{background:transparent;color:var(--text-muted);opacity:.35;border:2px dashed rgba(56,189,248,.25);}
+  .cal-week-cell.w-none{background:transparent}
+  .cal-week-header{font-size:12px;color:#38bdf8;font-weight:900;text-align:center;padding-bottom:6px;letter-spacing:1px;border-bottom:2px solid rgba(56,189,248,.35);}
+  body.light .cal-week-cell.w-gruen{background:rgba(16,185,129,.12);color:#059669}
+  body.light .cal-week-cell.w-orange{background:rgba(245,158,11,.12);color:#d97706}
+  body.light .cal-week-cell.w-rot{background:rgba(239,68,68,.1);color:#dc2626}
+  .commit-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:0;margin-bottom:16px;overflow:hidden;box-shadow:var(--shadow-card)}
+  .commit-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;user-select:none}
+  .commit-title{font-size:15px;font-weight:700;color:var(--text-strong);display:flex;align-items:center;gap:8px}
+  .commit-toggle{font-size:12px;color:var(--text-muted);transition:transform .2s;padding:4px 8px;background:none;border:none;cursor:pointer}
+  .commit-body{padding:0 18px 16px;display:none}
+  .commit-body.open{display:block}
+  .commit-textarea{width:100%;min-height:100px;padding:14px;border-radius:14px;border:1.5px solid var(--input-border);background:var(--input-bg);color:var(--text);font-size:13px;font-family:inherit;line-height:1.6;outline:none;resize:vertical;transition:border-color .2s}
+  .commit-textarea:focus{border-color:#c084fc}
+  .commit-textarea::placeholder{color:var(--text-muted);opacity:.7;font-style:italic}
+  .commit-charcount{font-size:10px;color:var(--text-muted);text-align:right;margin-top:4px;opacity:.6}
+
 </style>
 </head>
 <body>
@@ -672,143 +725,85 @@
     </div>
   </div>
   <div class="tabs">
-    <button class="tab active" onclick="showTab('training',this)">Training</button>
-    <button class="tab" onclick="showTab('ernaehrung',this)">Ernährung</button>
-    <button class="tab" onclick="showTab('ziel',this)">Ziele</button>
+    <button class="tab active" onclick="showTab('training',this)">Ziele</button>
+    <button class="tab" onclick="showTab('ernaehrung',this)">Reflexion</button>
+    <button class="tab" onclick="showTab('ziel',this)">Gewicht</button>
   </div>
 </div>
 
 <!-- CONTENT -->
 <div class="content">
 
-  <!-- TRAINING (Heute + Woche kombiniert) -->
+    <!-- TRAINING -->
   <div id="page-training" class="page active">
-
-    <!-- Dual progress bar -->
+    <!-- Commitment Section -->
+    <div class="commit-card" id="commitCard">
+      <div class="commit-header" onclick="toggleCommitment()">
+        <div class="commit-title">🔥 Mein Commitment</div>
+        <button class="commit-toggle" id="commitToggle">▾</button>
+      </div>
+      <div class="commit-body open" id="commitBody">
+        <textarea class="commit-textarea" id="commitText" maxlength="1000" placeholder="Dein Warum. Dein Versprechen. Dein Mantra. Halte hier fest, was dich antreibt und dich an dein Ziel erinnert. Schau auf deinen Körper, deinen Geist und deine Seele - schau auf DICH!" oninput="saveCommitment()"></textarea>
+        <div class="commit-charcount"><span id="commitCount">0</span>/1000</div>
+      </div>
+    </div>
     <div class="dual-prog-card">
       <div class="dual-prog-col">
         <div class="dual-prog-ring-wrap">
           <svg class="ring-svg" width="68" height="68">
             <circle cx="34" cy="34" r="27" fill="none" stroke="var(--ring-track)" stroke-width="5"/>
-            <circle id="ring-daily" cx="34" cy="34" r="27" fill="none" stroke="#c084fc" stroke-width="5"
-              stroke-dasharray="169.6" stroke-dashoffset="169.6" stroke-linecap="round"
-              style="transition:stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1)"/>
+            <circle id="ring-daily" cx="34" cy="34" r="27" fill="none" stroke="#c084fc" stroke-width="5" stroke-dasharray="169.6" stroke-dashoffset="169.6" stroke-linecap="round" style="transition:stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1)"/>
           </svg>
           <div class="dual-prog-pct-wrap"><span id="ring-daily-pct" style="color:#d8b4fe;font-size:14px;font-weight:700">0%</span></div>
         </div>
         <div class="dual-prog-label">Heute</div>
-        <div class="dual-prog-count"><span id="daily-done">0</span>/3</div>
+        <div class="dual-prog-count"><span id="daily-done">0</span>/<span id="daily-total">0</span></div>
         <div class="dual-prog-hint" id="daily-hint">Los geht's!</div>
       </div>
-
       <div class="dual-prog-divider"></div>
-
       <div class="dual-prog-col">
         <div class="dual-prog-ring-wrap">
           <svg class="ring-svg" width="68" height="68">
             <circle cx="34" cy="34" r="27" fill="none" stroke="var(--ring-track)" stroke-width="5"/>
-            <circle id="ring-weekly" cx="34" cy="34" r="27" fill="none" stroke="#38bdf8" stroke-width="5"
-              stroke-dasharray="169.6" stroke-dashoffset="169.6" stroke-linecap="round"
-              style="transition:stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1)"/>
+            <circle id="ring-weekly" cx="34" cy="34" r="27" fill="none" stroke="#38bdf8" stroke-width="5" stroke-dasharray="169.6" stroke-dashoffset="169.6" stroke-linecap="round" style="transition:stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1)"/>
           </svg>
           <div class="dual-prog-pct-wrap"><span id="ring-weekly-pct" style="color:#38bdf8;font-size:14px;font-weight:700">0%</span></div>
         </div>
         <div class="dual-prog-label">Woche</div>
-        <div class="dual-prog-count"><span id="weekly-done">0</span>/5</div>
-        <div class="dual-prog-hint" id="weekly-hint">Noch 5</div>
+        <div class="dual-prog-count"><span id="weekly-done">0</span>/<span id="weekly-total">0</span></div>
+        <div class="dual-prog-hint" id="weekly-hint">Los geht's!</div>
       </div>
     </div>
-
-    <!-- Weekday strip -->
     <div class="weekstrip" id="weekstrip"></div>
-
-    <!-- ── TÄGLICH ── -->
-    <div class="training-section-header">
-      <span class="training-section-badge daily-badge">Täglich</span>
-    </div>
-
-    <div class="sec-head"><span class="emoji">⚡</span><div><div class="title">Tagesroutine</div><div class="sub">Täglich erledigen</div></div></div>
-    <button class="task-btn" id="btn-su" onclick="toggleDaily('su')">
-      <div class="check-circle" id="chk-su"></div>
-      <div><div class="task-label" id="lbl-su">Sit-ups</div><div class="task-sub" id="sub-su">3 × 20 Wdh.</div></div>
-    </button>
-    <button class="task-btn" id="btn-bp" onclick="toggleDaily('bp')">
-      <div class="check-circle" id="chk-bp"></div>
-      <div><div class="task-label" id="lbl-bp">Brustdrücken</div><div class="task-sub" id="sub-bp">3 × 20 Wdh.</div></div>
-    </button>
-    <button class="task-btn" id="btn-viz" onclick="toggleDaily('viz')">
-      <div class="check-circle" id="chk-viz"></div>
-      <div><div class="task-label" id="lbl-viz">Visualisierung</div><div class="task-sub" id="sub-viz">5–10 Min.</div></div>
-    </button>
-
-    <!-- ── WÖCHENTLICH ── -->
-    <div class="training-section-header" style="margin-top:24px">
-      <span class="training-section-badge weekly-badge">Wöchentlich</span>
-    </div>
-
-    <div class="sec-head"><span class="emoji">🏋️</span><div><div class="title">Krafttraining</div><div class="sub">Ziel: 3× · je mind. 30 Min.</div></div></div>
-    <button class="task-btn" id="btn-k1" onclick="toggleWeekly('k1')">
-      <div class="check-circle" id="chk-k1"></div>
-      <div><div class="task-label" id="lbl-k1">Einheit #1</div><div class="task-sub" id="sub-k1">mind. 30 Min.</div></div>
-    </button>
-    <button class="task-btn" id="btn-k2" onclick="toggleWeekly('k2')">
-      <div class="check-circle" id="chk-k2"></div>
-      <div><div class="task-label" id="lbl-k2">Einheit #2</div><div class="task-sub" id="sub-k2">mind. 30 Min.</div></div>
-    </button>
-    <button class="task-btn" id="btn-k3" onclick="toggleWeekly('k3')">
-      <div class="check-circle" id="chk-k3"></div>
-      <div><div class="task-label" id="lbl-k3">Einheit #3</div><div class="task-sub" id="sub-k3">mind. 30 Min.</div></div>
-    </button>
-
-    <div class="sec-head"><span class="emoji">🏃</span><div><div class="title">Ausdauer</div><div class="sub">Ziel: 2× · Wandern / Radeln / Laufen</div></div></div>
-    <button class="task-btn" id="btn-c1" onclick="toggleWeekly('c1')">
-      <div class="check-circle" id="chk-c1"></div>
-      <div><div class="task-label" id="lbl-c1">Einheit #1</div><div class="task-sub" id="sub-c1">Wandern / Radeln / Laufen</div></div>
-    </button>
-    <button class="task-btn" id="btn-c2" onclick="toggleWeekly('c2')">
-      <div class="check-circle" id="chk-c2"></div>
-      <div><div class="task-label" id="lbl-c2">Einheit #2</div><div class="task-sub" id="sub-c2">Wandern / Radeln / Laufen</div></div>
-    </button>
-
-    <!-- Coach -->
-    <div class="coach-card" id="coach-card" style="margin-top:20px;margin-bottom:8px">
-      <div class="coach-header">
-        <span class="coach-icon">💡</span>
-        <div>
-          <div class="coach-title">Coach</div>
-          <div class="coach-day" id="coach-day"></div>
-        </div>
-      </div>
-      <div class="coach-tip" id="coach-tip"></div>
-    </div>
-
-    <!-- Training calendar -->
+    <div id="daily-section-wrap"></div>
+    <div id="weekly-section-wrap"></div>
+    <div id="goals-empty-state"></div>
+    <button class="goal-add-btn" id="goal-add-main" onclick="openGoalModal()">＋ Ziel hinzufügen</button>
     <div style="margin-top:24px">
-      <div class="training-section-header">
-        <span class="training-section-badge" style="background:rgba(167,139,250,0.12);color:#a78bfa;border:1px solid rgba(167,139,250,0.25);">📅 Rückblick</span>
-      </div>
+      <div class="training-section-header"><span class="training-section-badge" style="background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.25)">📅 Rückblick</span></div>
       <div class="cal-nav" style="margin-top:12px">
         <button class="cal-nav-btn" onclick="trainCalPrev()">‹</button>
         <div class="cal-month-label" id="train-cal-month-label"></div>
         <button class="cal-nav-btn" onclick="trainCalNext()">›</button>
       </div>
       <div class="cal-grid" id="train-cal-grid"></div>
-      <div class="cal-legend">
-        <div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#34d399;margin-right:4px;vertical-align:middle"></span> Alle 3 erledigt</div>
-        <div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#fbbf24;margin-right:4px;vertical-align:middle"></span> Teilweise</div>
-        <div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:rgba(239,68,68,0.7);margin-right:4px;vertical-align:middle"></span> Nichts</div>
-      </div>
+      <div class="cal-legend"><div style="width:100%;font-weight:800;opacity:.85;margin-bottom:4px">Tagesziele</div><div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#34d399;margin-right:4px;vertical-align:middle"></span> Alle erreicht</div><div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#fbbf24;margin-right:4px;vertical-align:middle"></span> Teilweise</div><div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:rgba(239,68,68,.7);margin-right:4px;vertical-align:middle"></span> Nichts</div><div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--surface3);border:1px solid var(--border3);margin-right:4px;vertical-align:middle"></span> Kein Eintrag</div><div style="width:100%;height:1px;background:var(--border2);margin:8px 0"></div><div style="width:100%;font-weight:800;opacity:.85;margin-bottom:4px">Wochenziele</div><div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(52,211,153,.35);border:2px solid rgba(52,211,153,.65);margin-right:4px;vertical-align:middle"></span> Alle erreicht</div><div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(251,191,36,.35);border:2px solid rgba(251,191,36,.65);margin-right:4px;vertical-align:middle"></span> Teilweise</div><div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(239,68,68,.32);border:2px solid rgba(239,68,68,.65);margin-right:4px;vertical-align:middle"></span> Nichts</div><div class="cal-legend-item" style="margin-top:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(56,189,248,.10);border:2px solid rgba(56,189,248,.45);margin-right:4px;vertical-align:middle"></span> <strong>W</strong> = Wochenstatus</div></div>
       <div id="train-cal-stats" class="cal-stats"></div>
     </div>
-
   </div>
+
 
   <!-- ERNÄHRUNG -->
   <div id="page-ernaehrung" class="page">
 
+    <div class="coach-card" id="coach-card" style="margin-bottom:16px">
+      <div class="coach-header"><span class="coach-icon">💡</span><div><div class="coach-title">Coach</div><div class="coach-day" id="coach-day"></div></div></div>
+      <div class="coach-tip" id="coach-tip"></div>
+    </div>
+
     <!-- Today rating -->
     <div class="ernaehr-today-card">
-      <div class="ernaehr-today-label">Heute bewerten</div>
+      <div class="ernaehr-today-label">HEUTE DEINEM GESAMTZIEL NÄHER GEKOMMEN?</div>
       <div class="ernaehr-today-date" id="ernaehr-today-date"></div>
       <div class="ernaehr-btn-row">
         <button class="ernaehr-rate-btn" id="erb-gruen" onclick="rateToday('gruen')">
@@ -877,6 +872,8 @@
 
 </div><!-- /content -->
 
+</div><!-- /content -->
+
 <!-- DAY DETAIL MODAL -->
 <div class="day-modal-overlay" id="dayModal">
   <div class="day-modal">
@@ -886,6 +883,29 @@
     </div>
     <div id="dayModalBadge"></div>
     <div id="dayModalTasks"></div>
+  </div>
+</div>
+
+<!-- GOAL MODAL -->
+<div class="goal-modal-overlay" id="goalModal">
+  <div class="goal-modal">
+    <div class="goal-modal-title" id="goalModalTitle">Neues Ziel</div>
+    <div class="gm-field"><label>Titel</label><input type="text" id="gmTitle" placeholder="z.B. Sit-ups" maxlength="60"></div>
+    <div class="gm-field"><label>Beschreibung</label><textarea id="gmDesc" placeholder="z.B. 3 × 20 Wdh." maxlength="500" rows="3"></textarea></div>
+    <div class="gm-field" id="gmWeeklyTargetField" style="display:none"><label>Wie oft pro Woche?</label><input type="number" id="gmWeeklyTarget" min="1" max="14" placeholder="z.B. 3"></div>
+    <div class="gm-field"><label>Kategorie</label><select id="gmCat"><option value="kraft">🏋️ Kraftziel</option><option value="ausdauer">🏃 Ausdauerziel</option><option value="mental">🧘 Mentales Ziel</option><option value="ernaehrung">🥗 Ernährungsziel</option><option value="sonstiges">⚡ Sonstiges</option></select></div>
+    <div id="gmTypeSection">
+      <label style="display:block;font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px">Typ</label>
+      <div class="gm-type-row">
+        <div class="gm-type-btn sel" id="gmTypeDaily" onclick="selGoalType('daily')">Täglich</div>
+        <div class="gm-type-btn" id="gmTypeWeekly" onclick="selGoalType('weekly')">Wöchentlich</div>
+      </div>
+    </div>
+    <div class="gm-actions">
+      <button class="gm-cancel" onclick="closeGoalModal()">Abbrechen</button>
+      <button class="gm-delete" id="gmDeleteBtn" style="display:none" onclick="deleteGoal()">Löschen</button>
+      <button class="gm-save" onclick="saveGoal()">Speichern</button>
+    </div>
   </div>
 </div>
 
@@ -904,569 +924,507 @@
     </div>
   </div>
 </div>
-
 <script>
-// ── Helpers ──────────────────────────────────────────────────────────────────
-function todayKey() { return new Date().toISOString().slice(0,10); }
 
-// ISO week-start (Monday) for any date
+function todayKey() { return new Date().toISOString().slice(0,10); }
 function weekKeyFor(dateStr) {
   const d = new Date(dateStr + 'T12:00:00');
-  const day = d.getDay() === 0 ? 7 : d.getDay(); // 1=Mon..7=Sun
-  const mon = new Date(d);
-  mon.setDate(d.getDate() - day + 1);
+  const day = d.getDay() === 0 ? 7 : d.getDay();
+  const mon = new Date(d); mon.setDate(d.getDate() - day + 1);
   return mon.toISOString().slice(0,10);
 }
 function weekKey() { return weekKeyFor(todayKey()); }
 function monthKey() { return new Date().toISOString().slice(0,7); }
 function weekdayIdx() { const d = new Date().getDay(); return d === 0 ? 6 : d - 1; }
-
-function loadLS(key, fallback = {}) {
-  try {
-    const v = localStorage.getItem(key);
-    if (v === null) return fallback;
-    const parsed = JSON.parse(v);
-    return (parsed !== null && typeof parsed === 'object') ? parsed : fallback;
-  } catch { return fallback; }
+function loadLS(key, fallback) {
+  if (fallback === undefined) fallback = {};
+  try { const v = localStorage.getItem(key); if (v === null) return fallback; const p = JSON.parse(v); return (p !== null && typeof p === 'object') ? p : fallback; } catch { return fallback; }
 }
 function saveLS(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} }
-
-// ── State ────────────────────────────────────────────────────────────────────
-// daily stored as 'daily-YYYY-MM-DD' → {su:bool, bp:bool, viz:bool}
-// weekly stored as 'weekly-YYYY-MM-DD' (Monday of week) → {k1..c2:bool}
-let daily  = loadLS('daily-' + todayKey());
-let weekly = loadLS('weekly-' + weekKey());
+function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+function getDateKeyForWeekday(weekdayI, refMon) {
+  const mon = refMon ? new Date(refMon + 'T12:00:00') : (() => { const d = new Date(); const day = d.getDay() === 0 ? 7 : d.getDay(); const m = new Date(d); m.setDate(d.getDate() - day + 1); return m; })();
+  const target = new Date(mon); target.setDate(mon.getDate() + weekdayI);
+  return target.toISOString().slice(0,10);
+}
+const WEEKDAYS = ['Mo','Di','Mi','Do','Fr','Sa','So'];
 let weights = loadLS('weights', {});
 
-const DAILY_TASKS  = ['su', 'bp', 'viz'];
-const WEEKLY_TASKS = ['k1', 'k2', 'k3', 'c1', 'c2'];
-const WEEKDAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
-
-// ── Date helpers ──────────────────────────────────────────────────────────────
-function getDateKeyForWeekday(weekdayI, referenceMonday) {
-  // weekdayI: 0=Mon..6=Sun relative to a Monday
-  const mon = referenceMonday
-    ? new Date(referenceMonday + 'T12:00:00')
-    : (() => {
-        const d = new Date();
-        const day = d.getDay() === 0 ? 7 : d.getDay();
-        const m = new Date(d); m.setDate(d.getDate() - day + 1); return m;
-      })();
-  const target = new Date(mon);
-  target.setDate(mon.getDate() + weekdayI);
-  return target.toISOString().slice(0, 10);
+// Commitment functions
+function initCommitment() {
+  const stored = localStorage.getItem('commitment') || '';
+  const el = document.getElementById('commitText');
+  el.value = stored;
+  document.getElementById('commitCount').textContent = stored.length;
+  const collapsed = localStorage.getItem('commitCollapsed') === 'true';
+  const body = document.getElementById('commitBody');
+  const toggle = document.getElementById('commitToggle');
+  if (collapsed) { body.classList.remove('open'); toggle.textContent = '▸'; }
+  else { body.classList.add('open'); toggle.textContent = '▾'; }
+}
+function saveCommitment() {
+  const el = document.getElementById('commitText');
+  localStorage.setItem('commitment', el.value);
+  document.getElementById('commitCount').textContent = el.value.length;
+}
+function toggleCommitment() {
+  const body = document.getElementById('commitBody');
+  const toggle = document.getElementById('commitToggle');
+  const isOpen = body.classList.contains('open');
+  if (isOpen) { body.classList.remove('open'); toggle.textContent = '▸'; localStorage.setItem('commitCollapsed','true'); }
+  else { body.classList.add('open'); toggle.textContent = '▾'; localStorage.setItem('commitCollapsed','false'); }
 }
 
-// ── Weekstrip (current week only) ────────────────────────────────────────────
+
+
+// goal-edit-icon keyboard support
+function goalEditKey(e){
+  const k = e.key;
+  if(k==='Enter' || k===' '){ e.preventDefault(); e.currentTarget.click(); }
+}
+const CATEGORIES = {
+  kraft:      {label:'Kraftziel',     color:'purple', emoji:'🏋️'},
+  ausdauer:   {label:'Ausdauerziel',  color:'blue',   emoji:'🏃'},
+  mental:     {label:'Mentales Ziel', color:'yellow', emoji:'🧘'},
+  ernaehrung: {label:'Ernährungsziel',color:'green',  emoji:'🥗'},
+  sonstiges:  {label:'Sonstiges',     color:'orange', emoji:'⚡'},
+};
+const CAT_ORDER = ['kraft','ausdauer','mental','ernaehrung','sonstiges'];
+
+let goals = loadLS('goals', null);
+if (goals === null) { goals = []; saveLS('goals', goals); }
+
+function normalizeGoals() {
+  let ch = false;
+  goals.forEach(g => {
+    if (g.type === 'weekly') {
+      if (g.weeklyTarget == null || isNaN(+g.weeklyTarget) || +g.weeklyTarget < 1) { g.weeklyTarget = 1; ch = true; }
+      else g.weeklyTarget = parseInt(g.weeklyTarget, 10);
+    } else {
+      if (g.weeklyTarget === undefined) { g.weeklyTarget = null; ch = true; }
+    }
+  });
+  if (ch) saveLS('goals', goals);
+}
+normalizeGoals();
+
+function getActiveGoals(dateStr, type) {
+  return goals.filter(g => g.type === type && g.effectiveFrom <= dateStr && (g.deletedAt === null || g.deletedAt > dateStr));
+}
+function normWD(wk) {
+  const obj = loadLS('weekly-' + wk);
+  let ch = false;
+  Object.keys(obj || {}).forEach(k => {
+    const v = obj[k];
+    if (v === true) { obj[k] = 1; ch = true; }
+    else if (v === false || v === null) { obj[k] = 0; ch = true; }
+  });
+  if (ch) saveLS('weekly-' + wk, obj);
+  return obj;
+}
+
+let dailyData = loadLS('daily-' + todayKey());
+let weeklyData = normWD(weekKey());
+
+function renderTrainingGoals() {
+  renderDailySection(); renderWeeklySection();
+  const aD = getActiveGoals(todayKey(), 'daily');
+  const aW = getActiveGoals(weekKey(), 'weekly');
+  const emptyEl = document.getElementById('goals-empty-state');
+  if (aD.length === 0 && aW.length === 0) { emptyEl.innerHTML = '<div class="empty-state"><div class="empty-emoji">📋</div><div class="empty-text">Noch keine Ziele eingetragen.<br>Leg jetzt dein erstes Ziel fest!</div></div>'; }
+  else { emptyEl.innerHTML = ''; }
+}
+
+function renderDailySection() {
+  const wrap = document.getElementById('daily-section-wrap');
+  const active = getActiveGoals(todayKey(), 'daily');
+  if (active.length === 0) { wrap.innerHTML = ''; updDailyProg(0, 0); return; }
+  let h = '<div class="training-section-header"><span class="training-section-badge daily-badge">Täglich</span></div>';
+  h += '<div class="sec-head"><span class="emoji">⚡</span><div><div class="title">Tagesroutine</div><div class="sub">Täglich erledigen</div></div></div>';
+  active.forEach(g => {
+    const done = !!dailyData[g.id], cl = CATEGORIES[g.category].color;
+    h += `<button class="task-btn${done ? ' done-' + cl : ''}" onclick="toggleDailyGoal('${g.id}')">`
+    h += `<div class="check-circle${done ? ' done-' + cl : ''}">${done ? '✓' : ''}</div>`;
+    h += `<div><div class="task-label${done ? ' done' : ''}">${esc(g.title)}</div>`;
+    h += `<div class="task-sub${done ? ' done-' + cl : ''}">${esc(g.description || '')}</div></div>`;
+    h += `<span class="goal-edit-icon" onclick="event.stopPropagation();openGoalModal(null,'${g.id}')" role="button" tabindex="0" onkeydown="goalEditKey(event)">⋮</span></button>`;
+  });
+  wrap.innerHTML = h;
+  updDailyProg(active.filter(g => !!dailyData[g.id]).length, active.length);
+}
+
+function updDailyProg(done, total) {
+  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+  const off = 169.6 - (pct / 100) * 169.6;
+  const r = document.getElementById('ring-daily');
+  r.style.strokeDashoffset = off;
+  r.style.stroke = pct === 100 ? '#34d399' : '#c084fc';
+  document.getElementById('ring-daily-pct').textContent = pct + '%';
+  document.getElementById('ring-daily-pct').style.color = pct === 100 ? '#34d399' : '#d8b4fe';
+  document.getElementById('daily-done').textContent = done;
+  document.getElementById('daily-total').textContent = total;
+  const hint = document.getElementById('daily-hint');
+  if (total === 0) hint.textContent = 'Keine Ziele';
+  else if (pct === 100) { hint.textContent = '🎉 Geschafft!'; hint.style.color = '#34d399'; }
+  else if (done === 0) { hint.textContent = "Los geht's!"; hint.style.color = '#8b7aaa'; }
+  else { hint.textContent = 'Noch ' + (total - done) + ' übrig'; hint.style.color = '#8b7aaa'; }
+}
+
+function toggleDailyGoal(gid) {
+  dailyData[gid] = !dailyData[gid];
+  saveLS('daily-' + todayKey(), dailyData);
+  renderTrainingGoals(); buildWeekstrip(); renderTrainCalendar();
+}
+
+function renderWeeklySection() {
+  const wrap = document.getElementById('weekly-section-wrap');
+  const wk = weekKey(); const active = getActiveGoals(wk, 'weekly');
+  weeklyData = normWD(wk);
+  if (active.length === 0) { wrap.innerHTML = ''; updWeeklyProg(0, 0); return; }
+  const groups = {};
+  active.forEach(g => (groups[g.category] = groups[g.category] || []).push(g));
+  let h = '<div class="training-section-header" style="margin-top:24px"><span class="training-section-badge weekly-badge">Wöchentlich</span></div>';
+  let dS = 0, tS = 0;
+  CAT_ORDER.forEach(cat => {
+    if (!groups[cat]) return;
+    const ci = CATEGORIES[cat];
+    h += `<div class="sec-head"><span class="emoji">${ci.emoji}</span><div><div class="title">${ci.label}</div></div></div>`;
+    groups[cat].forEach(g => {
+      const target = g.weeklyTarget || 1;
+      let cur = weeklyData[g.id] || 0; if (typeof cur !== 'number') cur = 0;
+      const done = cur >= target, cl = ci.color;
+      dS += Math.min(cur, target); tS += target;
+      const ct = done ? '✓' : (cur > 0 ? String(cur) : '');
+      const sub = (g.description ? esc(g.description) : '') + ' · ' + cur + '/' + target + ' erledigt';
+      h += `<button class="task-btn${done ? ' done-' + cl : ''}" onclick="toggleWeeklyGoal('${g.id}')">`
+      h += `<div class="check-circle${done ? ' done-' + cl : ''}">${ct}</div>`;
+      h += `<div><div class="task-label${done ? ' done' : ''}">${esc(g.title)}</div>`;
+      h += `<div class="task-sub${done ? ' done-' + cl : ''}">${sub}</div></div>`;
+      h += `<span class="goal-edit-icon" onclick="event.stopPropagation();openGoalModal(null,'${g.id}')" role="button" tabindex="0" onkeydown="goalEditKey(event)">⋮</span></button>`;
+    });
+  });
+  wrap.innerHTML = h; updWeeklyProg(dS, tS);
+}
+
+function updWeeklyProg(done, total) {
+  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+  const off = 169.6 - (pct / 100) * 169.6;
+  const r = document.getElementById('ring-weekly');
+  r.style.strokeDashoffset = off; r.style.stroke = pct === 100 ? '#34d399' : '#38bdf8';
+  document.getElementById('ring-weekly-pct').textContent = pct + '%';
+  document.getElementById('ring-weekly-pct').style.color = pct === 100 ? '#34d399' : '#38bdf8';
+  document.getElementById('weekly-done').textContent = done;
+  document.getElementById('weekly-total').textContent = total;
+  const hint = document.getElementById('weekly-hint');
+  if (total === 0) { hint.textContent = 'Keine Ziele'; hint.style.color = '#8b7aaa'; }
+  else if (pct === 100) { hint.textContent = '🎉 Perfekte Woche!'; hint.style.color = '#34d399'; }
+  else { hint.textContent = 'Noch ' + (total - done); hint.style.color = '#8b7aaa'; }
+}
+
+function toggleWeeklyGoal(gid) {
+  const wk = weekKey(), data = normWD(wk);
+  const g = goals.find(x => x.id === gid) || { weeklyTarget: 1 };
+  const target = g.weeklyTarget || 1;
+  let cur = data[gid] || 0; if (typeof cur !== 'number') cur = 0;
+  let next = cur + 1; if (next > target) next = 0;
+  data[gid] = next; saveLS('weekly-' + wk, data);
+  weeklyData = data;
+  renderWeeklySection();
+  renderTrainCalendar();
+}
+
 function buildWeekstrip() {
-  const strip = document.getElementById('weekstrip');
-  strip.innerHTML = '';
-  const todayI = weekdayIdx();
-  const currentWeekMon = weekKey();
-
+  const strip = document.getElementById('weekstrip'); strip.innerHTML = '';
+  const todayI = weekdayIdx(), wkMon = weekKey();
   WEEKDAYS.forEach((d, i) => {
-    const dateKey = getDateKeyForWeekday(i, currentWeekMon);
-    const isPast   = i < todayI;
-    const isToday  = i === todayI;
-    const isFuture = i > todayI;
-
-    const dayData  = loadLS('daily-' + dateKey);
-    const doneCount = DAILY_TASKS.filter(id => dayData[id]).length;
-    const isComplete = doneCount === DAILY_TASKS.length;
-    const isPartial  = doneCount > 0 && !isComplete;
-
+    const dk = getDateKeyForWeekday(i, wkMon);
+    const isPast = i < todayI, isToday = i === todayI, isFuture = i > todayI;
+    const hasData = localStorage.getItem('daily-' + dk) !== null;
+    const active = getActiveGoals(dk, 'daily');
+    const dayData = hasData ? loadLS('daily-' + dk) : {};
+    const doneCount = active.filter(g => dayData[g.id]).length;
+    const totalG = active.length;
+    const isComplete = hasData && totalG > 0 && doneCount === totalG;
+    const isPartial = hasData && doneCount > 0 && !isComplete;
     const el = document.createElement('div');
     let cls = 'weekday';
     if (isToday) cls += ' today';
-    if (!isFuture) {
-      if (isComplete) cls += ' done-day';
-      else if (isPartial) cls += ' partial-day';
-    }
-    if (isPast)   cls += ' past';
-    if (isFuture) cls += ' future';
-    el.className = cls;
-
-    let indicator = '';
-    if (!isFuture && isComplete) indicator = '<span class="day-check">✓</span>';
-    else if (!isFuture && isPartial) indicator = `<span class="day-pct">${doneCount}/3</span>`;
-    else if (isPast && doneCount === 0) indicator = '<span class="day-pct">–</span>';
-
-    el.innerHTML = `<span>${d}</span>${indicator}`;
-    if (!isFuture) {
-      el.style.cursor = 'pointer';
-      el.onclick = () => openDayModal(i, dateKey, currentWeekMon);
-    }
+    if (!isFuture && hasData) { if (isComplete) cls += ' done-day'; else if (isPartial) cls += ' partial-day'; }
+    if (isPast) cls += ' past'; if (isFuture) cls += ' future';
+    el.className = cls; let ind = '';
+    if (!isFuture && hasData && isComplete) ind = '<span class="day-check">✓</span>';
+    else if (!isFuture && hasData && isPartial) ind = `<span class="day-pct">${doneCount}/${totalG}</span>`;
+    else if (isPast && hasData && doneCount === 0) ind = '<span class="day-pct">–</span>';
+    el.innerHTML = `<span>${d}</span>${ind}`;
+    if (!isFuture) { el.style.cursor = 'pointer'; el.onclick = () => openDayModal(i, dk, wkMon); }
     strip.appendChild(el);
   });
 }
 
-// ── Training calendar ─────────────────────────────────────────────────────────
-let trainCalYear  = new Date().getFullYear();
-let trainCalMonth = new Date().getMonth();
-
-function trainCalPrev() {
-  trainCalMonth--;
-  if (trainCalMonth < 0) { trainCalMonth = 11; trainCalYear--; }
-  renderTrainCalendar();
+function getWeekCellHtml(wk, allFuture) {
+  if (allFuture) return '<div class="cal-week-cell w-none"></div>';
+  const active = getActiveGoals(wk, 'weekly');
+  if (active.length === 0) return '<div class="cal-week-cell w-empty">–</div>';
+  const wd = normWD(wk); let doneC = 0, partC = 0;
+  active.forEach(g => { const cur = typeof wd[g.id] === 'number' ? wd[g.id] : 0; if (cur >= (g.weeklyTarget || 1)) doneC++; else if (cur > 0) partC++; });
+  if (doneC === active.length) return '<div class="cal-week-cell w-gruen">✓</div>';
+  if (doneC > 0 || partC > 0) return `<div class="cal-week-cell w-orange">${doneC + partC}/${active.length}</div>`;
+  return '<div class="cal-week-cell w-rot">–</div>';
 }
+
+let trainCalYear = new Date().getFullYear();
+let trainCalMonth = new Date().getMonth();
+function trainCalPrev() { trainCalMonth--; if (trainCalMonth < 0) { trainCalMonth = 11; trainCalYear--; } renderTrainCalendar(); }
 function trainCalNext() {
   const now = new Date();
   if (trainCalYear > now.getFullYear() || (trainCalYear === now.getFullYear() && trainCalMonth >= now.getMonth())) return;
-  trainCalMonth++;
-  if (trainCalMonth > 11) { trainCalMonth = 0; trainCalYear++; }
-  renderTrainCalendar();
+  trainCalMonth++; if (trainCalMonth > 11) { trainCalMonth = 0; trainCalYear++; } renderTrainCalendar();
 }
-
 function renderTrainCalendar() {
-  const yr = trainCalYear, mo = trainCalMonth;
-  const today = todayKey();
-  document.getElementById('train-cal-month-label').textContent =
-    new Date(yr, mo, 1).toLocaleDateString('de-AT', { month: 'long', year: 'numeric' });
-
-  const firstDay   = new Date(yr, mo, 1).getDay();
-  const startOffset = firstDay === 0 ? 6 : firstDay - 1;
-  const daysInMonth = new Date(yr, mo + 1, 0).getDate();
-
+  const yr = trainCalYear, mo = trainCalMonth, today = todayKey();
+  document.getElementById('train-cal-month-label').textContent = new Date(yr, mo, 1).toLocaleDateString('de-AT', { month: 'long', year: 'numeric' });
+  const firstDay = new Date(yr, mo, 1).getDay();
+  const startOff = firstDay === 0 ? 6 : firstDay - 1;
+  const dim = new Date(yr, mo + 1, 0).getDate();
   let html = '';
-  ['Mo','Di','Mi','Do','Fr','Sa','So'].forEach(d => {
-    html += `<div class="cal-day-header">${d}</div>`;
-  });
-  for (let i = 0; i < startOffset; i++) html += `<div class="cal-day empty"></div>`;
+  ['Mo','Di','Mi','Do','Fr','Sa','So'].forEach(d => { html += `<div class="cal-day-header">${d}</div>`; });
+  html += '<div class="cal-week-header">W</div>';
 
-  let totalDays = 0, complete = 0, partial = 0, missed = 0;
+  let col = 0;
+  // Tagesziele Stats
+  let totalT = 0, comp = 0, part = 0, miss = 0;
+  // Wochenziele Stats
+  let totalW = 0, wG = 0, wO = 0, wR = 0;
 
-  for (let d = 1; d <= daysInMonth; d++) {
+  let lastDkInRow = null, rowAllFuture = true;
+
+  function addWeekStat(wk, allFuture){
+    if(allFuture) return;
+    const activeW = getActiveGoals(wk,'weekly');
+    if(!activeW || activeW.length===0) return;
+    const wd = normWD(wk);
+    let doneC = 0, partC = 0;
+    activeW.forEach(g=>{
+      const target = g.weeklyTarget || 1;
+      const cur = (typeof wd[g.id] === 'number') ? wd[g.id] : 0;
+      if(cur >= target) doneC++; else if(cur > 0) partC++;
+    });
+    totalW++;
+    if(doneC === activeW.length) wG++;
+    else if(doneC > 0 || partC > 0) wO++;
+    else wR++;
+  }
+
+  for (let i = 0; i < startOff; i++) { html += '<div class="cal-day empty"></div>'; col++; }
+
+  for (let d = 1; d <= dim; d++) {
     const dk = `${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isFuture = dk > today;
-    const isToday  = dk === today;
-    const dayData  = loadLS('daily-' + dk);
-    const doneCount = DAILY_TASKS.filter(id => dayData[id]).length;
-    const isComplete = doneCount === DAILY_TASKS.length;
-    const isPartial  = doneCount > 0 && !isComplete;
-
-    if (!isFuture) {
-      totalDays++;
-      if (isComplete) complete++;
-      else if (isPartial) partial++;
-      else missed++;
-    }
-
+    const isFut = dk > today, isT = dk === today;
+    const hasData = localStorage.getItem('daily-' + dk) !== null;
+    const active = getActiveGoals(dk, 'daily');
+    const dayD = hasData ? loadLS('daily-' + dk) : {};
+    const dc = active.filter(g => dayD[g.id]).length;
+    const tg = active.length;
+    const isComp = hasData && tg > 0 && dc === tg;
+    const isPart = hasData && dc > 0 && !isComp;
     let cls = 'cal-day';
-    if (isFuture) cls += ' future-day';
-    else if (isToday) cls += ' today-marker';
-    else cls += ' past-day';
-
-    // Color coding
-    if (!isFuture) {
-      if (isComplete) cls += ' gruen';
-      else if (isPartial) cls += ' orange';
-      else cls += ' rot';
+    if (isFut) cls += ' future-day'; else if (isT) cls += ' today-marker'; else cls += ' past-day';
+    if (!isFut && hasData && tg > 0) {
+      totalT++;
+      if (isComp) { cls += ' gruen'; comp++; }
+      else if (isPart) { cls += ' orange'; part++; }
+      else { cls += ' rot'; miss++; }
     }
+    const dot = (!isFut && hasData && dc > 0) ? '<div class="cal-day-dot"></div>' : '';
+    const wdi = new Date(dk + 'T12:00:00').getDay();
+    const idx = wdi === 0 ? 6 : wdi - 1;
+    const click = !isFut ? `onclick="openDayModal(${idx},'${dk}','${weekKeyFor(dk)}')"` : '';
+    html += `<div class="${cls}" ${click}><div class="cal-day-num">${d}</div>${dot}</div>`;
 
-    const dot = (!isFuture && doneCount > 0) ? '<div class="cal-day-dot"></div>' : '';
-    const clickAttr = !isFuture
-      ? `onclick="openDayModal(${new Date(dk+'T12:00:00').getDay()===0?6:new Date(dk+'T12:00:00').getDay()-1},'${dk}','${weekKeyFor(dk)}')"` : '';
+    if (!isFut) rowAllFuture = false;
+    lastDkInRow = dk;
+    col++;
 
-    html += `<div class="${cls}" ${clickAttr}>
-      <div class="cal-day-num">${d}</div>${dot}
-    </div>`;
+    if (col === 7) {
+      const wk = weekKeyFor(dk);
+      html += getWeekCellHtml(wk, rowAllFuture);
+      addWeekStat(wk, rowAllFuture);
+      col = 0;
+      rowAllFuture = true;
+    }
+  }
+
+  if (col > 0) {
+    while (col < 7) { html += '<div class="cal-day empty"></div>'; col++; }
+    const wk = lastDkInRow ? weekKeyFor(lastDkInRow) : null;
+    if (wk) {
+      html += getWeekCellHtml(wk, rowAllFuture);
+      addWeekStat(wk, rowAllFuture);
+    } else {
+      html += '<div class="cal-week-cell w-none"></div>';
+    }
   }
 
   document.getElementById('train-cal-grid').innerHTML = html;
 
-  // Stats
-  const statsEl = document.getElementById('train-cal-stats');
-  if (totalDays === 0) { statsEl.innerHTML = ''; return; }
-  const pctC = Math.round(complete/totalDays*100);
-  const pctP = Math.round(partial/totalDays*100);
-  const pctM = Math.round(missed/totalDays*100);
-  const monthName = new Date(yr, mo, 1).toLocaleDateString('de-AT', {month:'long'});
-  statsEl.innerHTML = `<div class="cal-stats-title">📊 ${monthName} im Überblick</div>
-  <div class="cal-stats-bars">
-    <div class="cal-stat-row">
-      <div class="cal-stat-name">✅ Alle 3</div>
-      <div class="cal-stat-bar-wrap"><div class="cal-stat-bar gruen" style="width:${pctC}%"></div></div>
-      <div class="cal-stat-count gruen">${complete}</div>
+  const sEl = document.getElementById('train-cal-stats');
+
+  const pC = totalT > 0 ? Math.round(comp / totalT * 100) : 0;
+  const pP = totalT > 0 ? Math.round(part / totalT * 100) : 0;
+  const pM = totalT > 0 ? Math.round(miss / totalT * 100) : 0;
+
+  const pWG = totalW > 0 ? Math.round(wG / totalW * 100) : 0;
+  const pWO = totalW > 0 ? Math.round(wO / totalW * 100) : 0;
+  const pWR = totalW > 0 ? Math.round(wR / totalW * 100) : 0;
+
+  const mn = new Date(yr, mo, 1).toLocaleDateString('de-AT', { month: 'long' });
+
+  sEl.innerHTML = `
+    <div class="cal-stats-title">📊 ${mn} im Überblick</div>
+
+    <div style="font-size:12px;font-weight:800;opacity:.85;margin:6px 0 10px">Tagesziele</div>
+    <div class="cal-stats-bars">
+      <div class="cal-stat-row"><div class="cal-stat-name">✅ Alle</div><div class="cal-stat-bar-wrap"><div class="cal-stat-bar gruen" style="width:${pC}%"></div></div><div class="cal-stat-count gruen">${comp}</div></div>
+      <div class="cal-stat-row"><div class="cal-stat-name">⚡ Teils</div><div class="cal-stat-bar-wrap"><div class="cal-stat-bar orange" style="width:${pP}%"></div></div><div class="cal-stat-count orange">${part}</div></div>
+      <div class="cal-stat-row"><div class="cal-stat-name">❌ Nichts</div><div class="cal-stat-bar-wrap"><div class="cal-stat-bar rot" style="width:${pM}%"></div></div><div class="cal-stat-count rot">${miss}</div></div>
     </div>
-    <div class="cal-stat-row">
-      <div class="cal-stat-name">⚡ Teils</div>
-      <div class="cal-stat-bar-wrap"><div class="cal-stat-bar orange" style="width:${pctP}%"></div></div>
-      <div class="cal-stat-count orange">${partial}</div>
-    </div>
-    <div class="cal-stat-row">
-      <div class="cal-stat-name">❌ Nichts</div>
-      <div class="cal-stat-bar-wrap"><div class="cal-stat-bar rot" style="width:${pctM}%"></div></div>
-      <div class="cal-stat-count rot">${missed}</div>
-    </div>
-  </div>`;
-}
 
-// ── Daily ─────────────────────────────────────────────────────────────────────
-function toggleDaily(id) {
-  daily[id] = !daily[id];
-  saveLS('daily-' + todayKey(), daily);
-  renderDaily();
-  buildWeekstrip();
-  renderTrainCalendar();
-}
+    <div style="height:1px;background:var(--border2);margin:14px 0"></div>
 
-function renderDaily() {
-  const colorMap = { su: 'purple', bp: 'purple', viz: 'green' };
-  DAILY_TASKS.forEach(id => {
-    const done   = !!daily[id];
-    const accent = colorMap[id];
-    const btn = document.getElementById('btn-' + id);
-    const chk = document.getElementById('chk-' + id);
-    const lbl = document.getElementById('lbl-' + id);
-    const sub = document.getElementById('sub-' + id);
-    if (!btn) return;
-    btn.className = 'task-btn' + (done ? ' done-' + accent : '');
-    chk.className = 'check-circle' + (done ? ' done-' + accent : '');
-    chk.textContent = done ? '✓' : '';
-    lbl.className = 'task-label' + (done ? ' done' : '');
-    sub.className = 'task-sub' + (done ? ' done-' + accent : '');
-  });
-
-  const done   = DAILY_TASKS.filter(id => daily[id]).length;
-  const pct    = Math.round(done / DAILY_TASKS.length * 100);
-  const circ   = 169.6;
-  const offset = circ - (pct / 100) * circ;
-  const ring   = document.getElementById('ring-daily');
-  ring.style.strokeDashoffset = offset;
-  ring.style.stroke = pct === 100 ? '#34d399' : '#c084fc';
-  document.getElementById('ring-daily-pct').textContent = pct + '%';
-  document.getElementById('ring-daily-pct').style.color = pct === 100 ? '#34d399' : '#d8b4fe';
-  document.getElementById('daily-done').textContent = done;
-  document.getElementById('daily-hint').textContent =
-    pct === 100 ? '🎉 Geschafft!' : done === 0 ? 'Los geht\'s!' : `Noch ${DAILY_TASKS.length - done} übrig`;
-  document.getElementById('daily-hint').style.color = pct === 100 ? '#34d399' : '#8b7aaa';
-}
-
-// ── Weekly ────────────────────────────────────────────────────────────────────
-function toggleWeekly(id) {
-  weekly[id] = !weekly[id];
-  saveLS('weekly-' + weekKey(), weekly);
-  renderWeekly();
-}
-
-function renderWeekly() {
-  const colorMap = { k1: 'blue', k2: 'blue', k3: 'blue', c1: 'green', c2: 'green' };
-  WEEKLY_TASKS.forEach(id => {
-    const done   = !!weekly[id];
-    const accent = colorMap[id];
-    const btn = document.getElementById('btn-' + id);
-    const chk = document.getElementById('chk-' + id);
-    const lbl = document.getElementById('lbl-' + id);
-    const sub = document.getElementById('sub-' + id);
-    if (!btn) return;
-    btn.className = 'task-btn' + (done ? ' done-' + accent : '');
-    chk.className = 'check-circle' + (done ? ' done-' + accent : '');
-    chk.textContent = done ? '✓' : '';
-    lbl.className = 'task-label' + (done ? ' done' : '');
-    sub.className = 'task-sub' + (done ? ' done-' + accent : '');
-  });
-
-  const done   = WEEKLY_TASKS.filter(id => weekly[id]).length;
-  const pct    = Math.round(done / WEEKLY_TASKS.length * 100);
-  const circ   = 169.6;
-  const offset = circ - (pct / 100) * circ;
-  const ring   = document.getElementById('ring-weekly');
-  ring.style.strokeDashoffset = offset;
-  ring.style.stroke = pct === 100 ? '#34d399' : '#38bdf8';
-  document.getElementById('ring-weekly-pct').textContent = pct + '%';
-  document.getElementById('ring-weekly-pct').style.color = pct === 100 ? '#34d399' : '#38bdf8';
-  document.getElementById('weekly-done').textContent = done;
-  document.getElementById('weekly-hint').textContent =
-    pct === 100 ? '🎉 Perfekte Woche!' : `Noch ${WEEKLY_TASKS.length - done}`;
-}
-
-// ── Milestones ────────────────────────────────────────────────────────────────
-// Fixed milestones: 15.05.2026 → 15.12.2026
-// Start: 81.3 kg, End: 70.8 kg → 8 intervals of 1.3125 kg ≈ round to 1.5 steps
-// Fixed targets per milestone:
-const MILESTONE_DATES = [
-  '2026-05-15','2026-06-15','2026-07-15','2026-08-15',
-  '2026-09-15','2026-10-15','2026-11-15','2026-12-15'
-];
-const START_WEIGHT = 81.3;
-const END_WEIGHT   = 70.8;
-const STEPS = MILESTONE_DATES.length - 1; // 7 steps
-const STEP_SIZE = +((START_WEIGHT - END_WEIGHT) / STEPS).toFixed(4); // ~1.5
-
-// Pre-computed target for each milestone index
-function getMilestoneTarget(idx) {
-  return +(START_WEIGHT - idx * STEP_SIZE).toFixed(1);
-}
-
-function getWeightOnOrBefore(dateKey) {
-  const allDates = Object.keys(weights).sort();
-  let best = null;
-  for (const d of allDates) {
-    if (d <= dateKey) best = d;
-  }
-  return best ? weights[best] : null;
-}
-
-function getLastWeight() {
-  const allDates = Object.keys(weights).sort();
-  if (!allDates.length) return null;
-  return weights[allDates[allDates.length - 1]];
-}
-
-function renderNextGoalSection() {
-  const el = document.getElementById('next-goal-section');
-  const today = todayKey();
-  // Find next upcoming milestone
-  const next = MILESTONE_DATES.find(d => d > today);
-  if (!next) { el.innerHTML = ''; return; }
-  const idx = MILESTONE_DATES.indexOf(next);
-  const target = getMilestoneTarget(idx);
-  const lastW = getLastWeight();
-  const nextDate = new Date(next + 'T12:00:00').toLocaleDateString('de-AT', {day:'numeric', month:'long', year:'numeric'});
-
-  if (lastW === null) {
-    el.innerHTML = `<div class="next-goal-card">
-      <div class="next-goal-label">Nächster Meilenstein</div>
-      <div class="next-goal-date">📅 ${nextDate}</div>
-      <div style="font-size:13px;color:#5b4e78;">Trage dein Gewicht ein um loszulegen.</div>
-    </div>`;
-    return;
-  }
-
-  const stillNeeded = +(lastW - target).toFixed(1);
-  const sign = stillNeeded > 0 ? '−' : '+';
-
-  el.innerHTML = `<div class="next-goal-card">
-    <div class="next-goal-label">Nächster Meilenstein</div>
-    <div class="next-goal-date">📅 ${nextDate}</div>
-    <div class="next-goal-row">
-      <div class="next-goal-box">
-        <div class="next-goal-box-label">Aktuell</div>
-        <div class="next-goal-box-val">${lastW.toLocaleString('de-AT')} kg</div>
-        <div class="next-goal-box-sub">letzter Eintrag</div>
+    <div style="font-size:12px;font-weight:800;opacity:.85;margin:0 0 10px">Wochenziele</div>
+    ${totalW===0 ? `<div style="font-size:12px;color:var(--text-muted);opacity:.8">Keine Wochenziele in diesem Monat.</div>` : `
+      <div class="cal-stats-bars">
+        <div class="cal-stat-row"><div class="cal-stat-name">✅ Alle</div><div class="cal-stat-bar-wrap"><div class="cal-stat-bar gruen" style="width:${pWG}%"></div></div><div class="cal-stat-count gruen">${wG}</div></div>
+        <div class="cal-stat-row"><div class="cal-stat-name">⚡ Teils</div><div class="cal-stat-bar-wrap"><div class="cal-stat-bar orange" style="width:${pWO}%"></div></div><div class="cal-stat-count orange">${wO}</div></div>
+        <div class="cal-stat-row"><div class="cal-stat-name">❌ Nichts</div><div class="cal-stat-bar-wrap"><div class="cal-stat-bar rot" style="width:${pWR}%"></div></div><div class="cal-stat-count rot">${wR}</div></div>
       </div>
-      <div class="next-goal-box">
-        <div class="next-goal-box-label">Ziel am 15.</div>
-        <div class="next-goal-box-val target">${target.toLocaleString('de-AT')} kg</div>
-        <div class="next-goal-box-sub">−1,5 kg/Monat</div>
-      </div>
-      <div class="next-goal-box">
-        <div class="next-goal-box-label">Noch</div>
-        <div class="next-goal-box-val still">${sign}${Math.abs(stillNeeded).toLocaleString('de-AT')} kg</div>
-        <div class="next-goal-box-sub">abzunehmen</div>
-      </div>
-    </div>
-  </div>`;
+    `}
+  `;
 }
 
-function renderMilestones() {
-  renderNextGoalSection();
-  const list = document.getElementById('milestone-list');
-  const today = todayKey();
-  let html = '';
 
-  MILESTONE_DATES.forEach((ms, idx) => {
-    const msDate = new Date(ms + 'T12:00:00');
-    const label = msDate.toLocaleDateString('de-AT', {day:'numeric', month:'long', year:'numeric'});
-    const target = getMilestoneTarget(idx);
-    const actual = getWeightOnOrBefore(ms);
-    const isPast = ms < today;
-    const isToday = ms === today;
-    const isFuture = ms > today;
-
-    let status, icon;
-    if (isFuture) {
-      status = 'future'; icon = '·';
-    } else if (actual === null) {
-      status = 'pending'; icon = '?';
-    } else if (idx === 0) {
-      status = 'pending'; icon = '⚖';
-    } else {
-      status = actual <= target ? 'achieved' : 'missed';
-      icon = actual <= target ? '✓' : '✗';
-    }
-
-    const actualDisplay = actual !== null
-      ? `${actual.toLocaleString('de-AT')} kg`
-      : (isFuture ? '–' : 'Kein Eintrag');
-
-    const diffBadge = (() => {
-      if (status === 'future') return `<div class="ms-diff-badge future">geplant</div>`;
-      if (status === 'pending' && idx === 0) return `<div class="ms-diff-badge pending">Start</div>`;
-      if (status === 'pending') return `<div class="ms-diff-badge pending">Eintragen!</div>`;
-      const diff = +(actual - target).toFixed(1);
-      const txt = diff <= 0 ? `${diff} kg ✓` : `+${diff} kg`;
-      return `<div class="ms-diff-badge ${status}">${txt}</div>`;
-    })();
-
-    html += `<div class="milestone-row">
-      <div class="ms-side ${status}">
-        <div class="ms-side-icon">${icon}</div>
-        <div class="ms-side-num">15.</div>
-      </div>
-      <div class="ms-body ${status}">
-        <div class="ms-date-label${status==='future'?' future':''}">${label}</div>
-        <div class="ms-vals-row">
-          <div class="ms-val-block">
-            <div class="ms-val-title">Eingetragen</div>
-            <div class="ms-val-num actual ${status}">${actualDisplay}</div>
-          </div>
-          <div class="ms-divider"></div>
-          <div class="ms-val-block">
-            <div class="ms-val-title">Zielgewicht</div>
-            <div class="ms-val-num goal">${target.toLocaleString('de-AT')} kg</div>
-          </div>
-          ${diffBadge}
-        </div>
-      </div>
-    </div>`;
-  });
-
-  list.innerHTML = html || `<div class="empty-state">
-    <div class="empty-emoji">⚖️</div>
-    <div class="empty-text">Trage dein Startgewicht ein, um zu beginnen</div>
-    <button class="empty-btn" onclick="openWeightModal()">Jetzt eintragen →</button>
-  </div>`;
-}
-
-// ── Day edit modal ────────────────────────────────────────────────────────────
-const TASK_LABELS = {
-  su:  '🏋️ Sit-ups (3×20)',
-  bp:  '💪 Brustdrücken (3×20)',
-  viz: '🧘 Visualisierung',
-};
-const TASK_COLORS = { su: 'purple', bp: 'purple', viz: 'green' };
-const WEEKLY_LABELS = {
-  k1:'💪 Krafttraining #1', k2:'💪 Krafttraining #2', k3:'💪 Krafttraining #3',
-  c1:'🏃 Ausdauer #1', c2:'🏃 Ausdauer #2'
-};
-const WEEKLY_COLORS = { k1:'blue', k2:'blue', k3:'blue', c1:'green', c2:'green' };
-
-let editDateKey   = null;
-let editWeekKey   = null;
-
-function openDayModal(weekdayI, dateKey, weekMonday) {
-  editDateKey = dateKey;
-  editWeekKey = weekMonday || weekKeyFor(dateKey);
-
+let editDateKey = null, editWeekKey = null;
+function openDayModal(wdI, dk, wkMon) {
+  editDateKey = dk; editWeekKey = wkMon || weekKeyFor(dk);
   const names = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
-  const dateObj = new Date(dateKey + 'T12:00:00');
-  const dateStr = dateObj.toLocaleDateString('de-AT', {day:'numeric', month:'long', year:'numeric'});
-  document.getElementById('dayModalTitle').textContent =
-    dateKey === todayKey() ? `Heute, ${dateStr}` : `${names[weekdayI]}, ${dateStr}`;
-
-  renderDayModalContent();
-  document.getElementById('dayModal').classList.add('open');
+  const ds = new Date(dk + 'T12:00:00').toLocaleDateString('de-AT', { day: 'numeric', month: 'long', year: 'numeric' });
+  document.getElementById('dayModalTitle').textContent = dk === todayKey() ? `Heute, ${ds}` : `${names[wdI]}, ${ds}`;
+  renderDMC(); document.getElementById('dayModal').classList.add('open');
 }
-
-function renderDayModalContent() {
-  const dayData = loadLS('daily-' + editDateKey);
-  const wkData  = loadLS('weekly-' + editWeekKey);
-  const doneCount = DAILY_TASKS.filter(id => dayData[id]).length;
-  const isComplete = doneCount === DAILY_TASKS.length;
-
-  let badgeHTML;
-  if (isComplete) badgeHTML = '<div class="day-modal-badge full">🎉 Tagesziel erreicht!</div>';
-  else if (doneCount > 0) badgeHTML = `<div class="day-modal-badge partial">⚡ ${doneCount} von ${DAILY_TASKS.length} erledigt</div>`;
-  else badgeHTML = '<div class="day-modal-badge none">Nichts eingetragen</div>';
-  document.getElementById('dayModalBadge').innerHTML = badgeHTML;
-
-  let html = `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:8px">Täglich</div>`;
-  DAILY_TASKS.forEach(id => {
-    const done   = !!dayData[id];
-    const accent = TASK_COLORS[id];
-    html += `<div class="day-edit-row ${done ? 'done-'+accent : ''}" onclick="toggleDayTask('${id}')">
-      <div class="day-edit-check ${done ? 'done-'+accent : ''}">${done ? '✓' : ''}</div>
-      <div class="day-edit-label ${done ? 'done' : ''}">${TASK_LABELS[id]}</div>
-    </div>`;
+function renderDMC() {
+  const aD = getActiveGoals(editDateKey, 'daily');
+  const key = 'daily-' + editDateKey;
+  const hasD = localStorage.getItem(key) !== null;
+  const dD = hasD ? loadLS(key) : {};
+  const dc = aD.filter(g => dD[g.id]).length;
+  const isC = aD.length > 0 && dc === aD.length && hasD;
+  let badge;
+  if (aD.length === 0) badge = '<div class="day-modal-badge none">Keine Tagesziele aktiv</div>';
+  else if (isC) badge = '<div class="day-modal-badge full">🎉 Tagesziel erreicht!</div>';
+  else if (dc > 0) badge = `<div class="day-modal-badge partial">⚡ ${dc} von ${aD.length} erledigt</div>`;
+  else badge = '<div class="day-modal-badge none">Nichts eingetragen</div>';
+  document.getElementById('dayModalBadge').innerHTML = badge;
+  let h = `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:8px">Täglich</div>`;
+  if (aD.length === 0) h += '<div style="font-size:13px;color:var(--text-muted);padding:8px 0">Keine Tagesziele für diesen Tag.</div>';
+  else aD.forEach(g => {
+    const done = !!dD[g.id], cl = CATEGORIES[g.category].color;
+    h += `<div class="day-edit-row ${done ? 'done-' + cl : ''}" onclick="toggleDayTask('${g.id}')">\n      <div class="day-edit-check ${done ? 'done-' + cl : ''}">${done ? '✓' : ''}</div>\n      <div class="day-edit-label ${done ? 'done' : ''}">${CATEGORIES[g.category].emoji} ${esc(g.title)}<div style="font-size:11px;color:var(--text-muted);margin-top:1px">${esc(g.description || '')}</div></div></div>`;
   });
-
-  // Always show weekly tasks (user can edit them for the week of the selected day)
-  html += `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin:14px 0 8px">Wöchentlich (${new Date(editWeekKey+'T12:00:00').toLocaleDateString('de-AT',{day:'numeric',month:'short'})}-Woche)</div>`;
-  WEEKLY_TASKS.forEach(id => {
-    const done   = !!wkData[id];
-    const accent = WEEKLY_COLORS[id];
-    html += `<div class="day-edit-row ${done ? 'done-'+accent : ''}" onclick="toggleDayWeeklyTask('${id}')">
-      <div class="day-edit-check ${done ? 'done-'+accent : ''}">${done ? '✓' : ''}</div>
-      <div class="day-edit-label ${done ? 'done' : ''}">${WEEKLY_LABELS[id]}</div>
-    </div>`;
+  const wkL = new Date(editWeekKey + 'T12:00:00').toLocaleDateString('de-AT', { day: 'numeric', month: 'short' });
+  h += `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin:14px 0 8px">Wöchentlich (${wkL}-Woche)</div>`;
+  const aW = getActiveGoals(editWeekKey, 'weekly');
+  const wD = normWD(editWeekKey);
+  if (aW.length === 0) h += '<div style="font-size:13px;color:var(--text-muted);padding:8px 0">Keine Wochenziele für diese Woche.</div>';
+  else aW.forEach(g => {
+    const target = g.weeklyTarget || 1;
+    let cur = wD[g.id] || 0; if (typeof cur !== 'number') cur = 0;
+    const done = cur >= target, cl = CATEGORIES[g.category].color;
+    const ct = done ? '✓' : (cur > 0 ? String(cur) : '');
+    h += `<div class="day-edit-row ${done ? 'done-' + cl : ''}" onclick="toggleDayWeeklyTask('${g.id}')">\n      <div class="day-edit-check ${done ? 'done-' + cl : ''}">${ct}</div>\n      <div class="day-edit-label ${done ? 'done' : ''}">${CATEGORIES[g.category].emoji} ${esc(g.title)}<div style="font-size:11px;color:var(--text-muted);margin-top:1px">${esc(g.description || '')} · ${cur}/${target}</div></div></div>`;
   });
-
-  document.getElementById('dayModalTasks').innerHTML = html;
+  document.getElementById('dayModalTasks').innerHTML = h;
 }
-
-function toggleDayTask(id) {
-  const key  = 'daily-' + editDateKey;
-  const data = loadLS(key);
-  data[id] = !data[id];
-  saveLS(key, data);
-  // sync live state if editing today
-  if (editDateKey === todayKey()) {
-    daily[id] = data[id];
-    renderDaily();
-  }
-  buildWeekstrip();
+function toggleDayTask(gid) {
+  const k = 'daily-' + editDateKey, d = loadLS(k);
+  d[gid] = !d[gid]; saveLS(k, d);
+  if (editDateKey === todayKey()) { dailyData = d; renderTrainingGoals(); }
+  buildWeekstrip(); renderTrainCalendar(); renderDMC();
+}
+function toggleDayWeeklyTask(gid) {
+  const k = 'weekly-' + editWeekKey, d = normWD(editWeekKey);
+  const g = goals.find(x => x.id === gid) || { weeklyTarget: 1 };
+  const target = g.weeklyTarget || 1;
+  let cur = d[gid] || 0; let next = cur + 1; if (next > target) next = 0;
+  d[gid] = next; saveLS(k, d);
+  if (editWeekKey === weekKey()) { weeklyData = d; renderWeeklySection(); }
   renderTrainCalendar();
-  renderDayModalContent();
+  renderDMC();
 }
+function closeDayModal() { document.getElementById('dayModal').classList.remove('open'); editDateKey = null; editWeekKey = null; }
+document.getElementById('dayModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeDayModal(); });
 
-function toggleDayWeeklyTask(id) {
-  const key  = 'weekly-' + editWeekKey;
-  const data = loadLS(key);
-  data[id] = !data[id];
-  saveLS(key, data);
-  // sync live weekly state if editing current week
-  if (editWeekKey === weekKey()) {
-    weekly[id] = data[id];
-    renderWeekly();
+let editGoalId = null, newGoalType = 'daily';
+function openGoalModal(type, goalId) {
+  editGoalId = goalId || null; const isE = !!editGoalId;
+  document.getElementById('goalModalTitle').textContent = isE ? 'Ziel bearbeiten' : 'Neues Ziel';
+  document.getElementById('gmDeleteBtn').style.display = isE ? '' : 'none';
+  document.getElementById('gmTypeSection').style.display = isE ? 'none' : '';
+  const wf = document.getElementById('gmWeeklyTargetField');
+  if (isE) {
+    const g = goals.find(x => x.id === editGoalId); if (!g) return;
+    document.getElementById('gmTitle').value = g.title || '';
+    document.getElementById('gmDesc').value = g.description || '';
+    document.getElementById('gmCat').value = g.category || 'kraft';
+    newGoalType = g.type;
+    if (g.type === 'weekly') { wf.style.display = 'block'; document.getElementById('gmWeeklyTarget').value = g.weeklyTarget || 1; }
+    else { wf.style.display = 'none'; document.getElementById('gmWeeklyTarget').value = ''; }
+  } else {
+    document.getElementById('gmTitle').value = ''; document.getElementById('gmDesc').value = '';
+    document.getElementById('gmCat').value = 'kraft'; newGoalType = type || 'daily'; selGoalType(newGoalType);
   }
-  renderDayModalContent();
+  document.getElementById('goalModal').classList.add('open');
+  setTimeout(() => document.getElementById('gmTitle').focus(), 100);
+}
+function closeGoalModal() { document.getElementById('goalModal').classList.remove('open'); editGoalId = null; }
+document.getElementById('goalModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeGoalModal(); });
+function selGoalType(t) {
+  newGoalType = t;
+  document.getElementById('gmTypeDaily').className = 'gm-type-btn' + (t === 'daily' ? ' sel' : '');
+  document.getElementById('gmTypeWeekly').className = 'gm-type-btn' + (t === 'weekly' ? ' sel' : '');
+  const wf = document.getElementById('gmWeeklyTargetField');
+  if (t === 'weekly') { wf.style.display = 'block'; if (!document.getElementById('gmWeeklyTarget').value) document.getElementById('gmWeeklyTarget').value = '1'; }
+  else { wf.style.display = 'none'; document.getElementById('gmWeeklyTarget').value = ''; }
+}
+function saveGoal() {
+  const ti = document.getElementById('gmTitle').value.trim();
+  const de = document.getElementById('gmDesc').value.trim();
+  const ca = document.getElementById('gmCat').value;
+  if (!ti) { document.getElementById('gmTitle').focus(); return; }
+  let wt = null;
+  if (newGoalType === 'weekly') {
+    const v = parseInt(document.getElementById('gmWeeklyTarget').value, 10);
+    if (!v || v < 1) { document.getElementById('gmWeeklyTarget').focus(); return; }
+    wt = v;
+  }
+  if (editGoalId) {
+    const g = goals.find(x => x.id === editGoalId);
+    if (g) { g.title = ti; g.description = de; g.category = ca; if (g.type === 'weekly') g.weeklyTarget = wt || g.weeklyTarget || 1; }
+  } else {
+    const ef = newGoalType === 'weekly' ? weekKey() : todayKey();
+    goals.push({ id: 'g_' + Date.now(), title: ti, description: de, category: ca, type: newGoalType, effectiveFrom: ef, deletedAt: null, weeklyTarget: newGoalType === 'weekly' ? (wt || 1) : null });
+  }
+  saveLS('goals', goals); closeGoalModal();
+  dailyData = loadLS('daily-' + todayKey()); weeklyData = normWD(weekKey());
+  renderTrainingGoals(); buildWeekstrip(); renderTrainCalendar();
+}
+function deleteGoal() {
+  if (!editGoalId) return;
+  const g = goals.find(x => x.id === editGoalId);
+  if (g) g.deletedAt = g.type === 'weekly' ? weekKey() : todayKey();
+  saveLS('goals', goals); closeGoalModal();
+  renderTrainingGoals(); buildWeekstrip(); renderTrainCalendar();
 }
 
-function closeDayModal() {
-  document.getElementById('dayModal').classList.remove('open');
-  editDateKey = null;
-  editWeekKey = null;
-}
-document.getElementById('dayModal').addEventListener('click', e => {
-  if (e.target === e.currentTarget) closeDayModal();
-});
-
-
-function openWeightModal() {
-  const today = todayKey();
-  document.getElementById('modalMonthLabel').textContent =
-    new Date(today + 'T12:00:00').toLocaleDateString('de-AT',{day:'numeric', month:'long', year:'numeric'});
-  document.getElementById('weightInput').value = weights[today] || '';
-  document.getElementById('weightModal').classList.add('open');
-  setTimeout(()=>document.getElementById('weightInput').focus(),100);
-}
-function closeWeightModal() {
-  document.getElementById('weightModal').classList.remove('open');
-}
-function saveWeight() {
-  const raw = document.getElementById('weightInput').value.replace(',','.');
-  const val = parseFloat(raw);
-  if (isNaN(val)) return;
-  weights[todayKey()] = val;
-  saveLS('weights', weights);
-  closeWeightModal();
-  renderMilestones();
-}
-document.getElementById('weightInput').addEventListener('keydown', e => { if(e.key==='Enter') saveWeight(); });
-document.getElementById('weightModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeWeightModal(); });
-
-// ── Tabs ──────────────────────────────────────────────────────────────────────
-function showTab(name, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  btn.classList.add('active');
-  if (name === 'ernaehrung') renderErnaehrung();
-  if (name === 'training') { renderDaily(); renderWeekly(); buildWeekstrip(); renderTrainCalendar(); renderCoach(); }
-}
-
-// ── Ernährung ─────────────────────────────────────────────────────────────────
 let ernaehrung = loadLS('ernaehrung', {}); // { "YYYY-MM-DD": "gruen"|"orange"|"rot" }
 let calViewYear  = new Date().getFullYear();
 let calViewMonth = new Date().getMonth(); // 0-indexed
@@ -1624,7 +1582,6 @@ function renderCalStats() {
   </div>`;
 }
 
-// ── Coach ─────────────────────────────────────────────────────────────────────
 const COACH_TIPS = [
   // Motivation & Mindset
   "Jeder große Fortschritt beginnt mit einem kleinen Schritt. Du hast dich heute entschieden, aktiv zu sein — das ist bereits der wichtigste Schritt.",
@@ -1756,36 +1713,204 @@ function toggleTheme() {
   applyTheme();
 }
 
-// ── Boot ──────────────────────────────────────────────────────────────────────
-function init() {
-  // Delete yesterday's weight entry if present, keep today's as 81.3 kg
-  const yesterday = (() => {
-    const d = new Date(); d.setDate(d.getDate()-1);
-    return d.toISOString().slice(0,10);
-  })();
-  if (weights[yesterday] !== undefined) {
-    delete weights[yesterday];
-    saveLS('weights', weights);
+const MILESTONE_DATES = [
+  '2026-05-15','2026-06-15','2026-07-15','2026-08-15',
+  '2026-09-15','2026-10-15','2026-11-15','2026-12-15'
+];
+const START_WEIGHT = 81.3;
+const END_WEIGHT   = 70.8;
+const STEPS = MILESTONE_DATES.length - 1; // 7 steps
+const STEP_SIZE = +((START_WEIGHT - END_WEIGHT) / STEPS).toFixed(4); // ~1.5
+
+// Pre-computed target for each milestone index
+function getMilestoneTarget(idx) {
+  return +(START_WEIGHT - idx * STEP_SIZE).toFixed(1);
+}
+
+function getWeightOnOrBefore(dateKey) {
+  const allDates = Object.keys(weights).sort();
+  let best = null;
+  for (const d of allDates) {
+    if (d <= dateKey) best = d;
   }
-  // Set today's weight to 81.3 if not already set
+  return best ? weights[best] : null;
+}
+
+function getLastWeight() {
+  const allDates = Object.keys(weights).sort();
+  if (!allDates.length) return null;
+  return weights[allDates[allDates.length - 1]];
+}
+
+function renderNextGoalSection() {
+  const el = document.getElementById('next-goal-section');
   const today = todayKey();
-  if (!weights[today]) {
-    weights[today] = 81.3;
-    saveLS('weights', weights);
+  // Find next upcoming milestone
+  const next = MILESTONE_DATES.find(d => d > today);
+  if (!next) { el.innerHTML = ''; return; }
+  const idx = MILESTONE_DATES.indexOf(next);
+  const target = getMilestoneTarget(idx);
+  const lastW = getLastWeight();
+  const nextDate = new Date(next + 'T12:00:00').toLocaleDateString('de-AT', {day:'numeric', month:'long', year:'numeric'});
+
+  if (lastW === null) {
+    el.innerHTML = `<div class="next-goal-card">
+      <div class="next-goal-label">Nächster Meilenstein</div>
+      <div class="next-goal-date">📅 ${nextDate}</div>
+      <div style="font-size:13px;color:#5b4e78;">Trage dein Gewicht ein um loszulegen.</div>
+    </div>`;
+    return;
   }
 
+  const stillNeeded = +(lastW - target).toFixed(1);
+  const sign = stillNeeded > 0 ? '−' : '+';
+
+  el.innerHTML = `<div class="next-goal-card">
+    <div class="next-goal-label">Nächster Meilenstein</div>
+    <div class="next-goal-date">📅 ${nextDate}</div>
+    <div class="next-goal-row">
+      <div class="next-goal-box">
+        <div class="next-goal-box-label">Aktuell</div>
+        <div class="next-goal-box-val">${lastW.toLocaleString('de-AT')} kg</div>
+        <div class="next-goal-box-sub">letzter Eintrag</div>
+      </div>
+      <div class="next-goal-box">
+        <div class="next-goal-box-label">Ziel am 15.</div>
+        <div class="next-goal-box-val target">${target.toLocaleString('de-AT')} kg</div>
+        <div class="next-goal-box-sub">−1,5 kg/Monat</div>
+      </div>
+      <div class="next-goal-box">
+        <div class="next-goal-box-label">Noch</div>
+        <div class="next-goal-box-val still">${sign}${Math.abs(stillNeeded).toLocaleString('de-AT')} kg</div>
+        <div class="next-goal-box-sub">abzunehmen</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderMilestones() {
+  renderNextGoalSection();
+  const list = document.getElementById('milestone-list');
+  const today = todayKey();
+  let html = '';
+
+  MILESTONE_DATES.forEach((ms, idx) => {
+    const msDate = new Date(ms + 'T12:00:00');
+    const label = msDate.toLocaleDateString('de-AT', {day:'numeric', month:'long', year:'numeric'});
+    const target = getMilestoneTarget(idx);
+    const actual = getWeightOnOrBefore(ms);
+    const isPast = ms < today;
+    const isToday = ms === today;
+    const isFuture = ms > today;
+
+    let status, icon;
+    if (isFuture) {
+      status = 'future'; icon = '·';
+    } else if (actual === null) {
+      status = 'pending'; icon = '?';
+    } else if (idx === 0) {
+      status = 'pending'; icon = '⚖';
+    } else {
+      status = actual <= target ? 'achieved' : 'missed';
+      icon = actual <= target ? '✓' : '✗';
+    }
+
+    const actualDisplay = actual !== null
+      ? `${actual.toLocaleString('de-AT')} kg`
+      : (isFuture ? '–' : 'Kein Eintrag');
+
+    const diffBadge = (() => {
+      if (status === 'future') return `<div class="ms-diff-badge future">geplant</div>`;
+      if (status === 'pending' && idx === 0) return `<div class="ms-diff-badge pending">Start</div>`;
+      if (status === 'pending') return `<div class="ms-diff-badge pending">Eintragen!</div>`;
+      const diff = +(actual - target).toFixed(1);
+      const txt = diff <= 0 ? `${diff} kg ✓` : `+${diff} kg`;
+      return `<div class="ms-diff-badge ${status}">${txt}</div>`;
+    })();
+
+    html += `<div class="milestone-row">
+      <div class="ms-side ${status}">
+        <div class="ms-side-icon">${icon}</div>
+        <div class="ms-side-num">15.</div>
+      </div>
+      <div class="ms-body ${status}">
+        <div class="ms-date-label${status==='future'?' future':''}">${label}</div>
+        <div class="ms-vals-row">
+          <div class="ms-val-block">
+            <div class="ms-val-title">Eingetragen</div>
+            <div class="ms-val-num actual ${status}">${actualDisplay}</div>
+          </div>
+          <div class="ms-divider"></div>
+          <div class="ms-val-block">
+            <div class="ms-val-title">Zielgewicht</div>
+            <div class="ms-val-num goal">${target.toLocaleString('de-AT')} kg</div>
+          </div>
+          ${diffBadge}
+        </div>
+      </div>
+    </div>`;
+  });
+
+  list.innerHTML = html || `<div class="empty-state">
+    <div class="empty-emoji">⚖️</div>
+    <div class="empty-text">Trage dein Startgewicht ein, um zu beginnen</div>
+    <button class="empty-btn" onclick="openWeightModal()">Jetzt eintragen →</button>
+  </div>`;
+}
+
+function openWeightModal() {
+  const today = todayKey();
+  document.getElementById('modalMonthLabel').textContent =
+    new Date(today + 'T12:00:00').toLocaleDateString('de-AT',{day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('weightInput').value = weights[today] || '';
+  document.getElementById('weightModal').classList.add('open');
+  setTimeout(()=>document.getElementById('weightInput').focus(),100);
+}
+function closeWeightModal() {
+  document.getElementById('weightModal').classList.remove('open');
+}
+function saveWeight() {
+  const raw = document.getElementById('weightInput').value.replace(',','.');
+  const val = parseFloat(raw);
+  if (isNaN(val)) return;
+  weights[todayKey()] = val;
+  saveLS('weights', weights);
+  closeWeightModal();
+  renderMilestones();
+}
+document.getElementById('weightInput').addEventListener('keydown', e => { if(e.key==='Enter') saveWeight(); });
+document.getElementById('weightModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeWeightModal(); });
+
+
+function showTab(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'ernaehrung') { renderErnaehrung(); renderCoach(); }
+  if (name === 'training') { renderTrainingGoals(); buildWeekstrip(); renderTrainCalendar(); }
+}
+
+
+
+function init() {
+  const yesterday = (() => { const d = new Date(); d.setDate(d.getDate()-1); return d.toISOString().slice(0,10); })();
+  if (weights[yesterday] !== undefined) { delete weights[yesterday]; saveLS('weights', weights); }
+  const today = todayKey();
+  if (!weights[today]) { weights[today] = 81.3; saveLS('weights', weights); }
   document.getElementById('todayDate').textContent =
     new Date().toLocaleDateString('de-AT', {weekday:'long', day:'numeric', month:'long'});
   applyTheme();
+  initCommitment();
   buildWeekstrip();
-  renderDaily();
-  renderWeekly();
+  renderTrainingGoals();
   renderMilestones();
   renderErnaehrung();
   renderTrainCalendar();
   renderCoach();
 }
 init();
+
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
