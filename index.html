@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GreatYou">
+<meta name="theme-color" content="#0d0b18">
+<meta name="description" content="GreatYou – Dein persönlicher Fitness- und Ernährungstracker">
+<link rel="manifest" href="manifest.json">
+<title>GreatYou</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=Cormorant+Garamond:wght@700&display=swap" rel="stylesheet">
+<style>
+  /* ── Theme variables ─────────────────────────────────── */
+  :root {
+    --bg: radial-gradient(ellipse at 20% 0%, #1a0e2e 0%, #0d0b18 50%, #0a1220 100%);
+    --bg-solid: #0d0b18;
+    --header-bg: rgba(13,11,24,0.88);
+    --header-border: rgba(255,255,255,0.06);
+    --text: #f0eaf8;
+    --text-muted: #5b4e78;
+    --text-mid: #8b7aaa;
+    --text-strong: #e9d5ff;
+    --text-accent: #d8b4fe;
+    --surface: rgba(255,255,255,0.04);
+    --surface2: rgba(255,255,255,0.03);
+    --surface3: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.05);
+    --border3: rgba(255,255,255,0.1);
+    --pill-inactive: #4a3d63;
+    --tab-active-bg: rgba(192,132,252,0.14);
+    --check-empty: rgba(255,255,255,0.07);
+    --check-border: rgba(255,255,255,0.12);
+    --ring-track: rgba(255,255,255,0.07);
+    --modal-bg: #130f22;
+    --day-modal-bg: #130f22;
+    --input-bg: rgba(255,255,255,0.06);
+    --input-border: rgba(255,255,255,0.12);
+    --weekday-inactive: #3d3053;
+    --weekday-future: #2a2240;
+    --day-past: #7a6a9a;
+    --day-future: #2a2240;
+    --plan-border: rgba(255,255,255,0.05);
+    --theme-icon: '☀️';
+  }
+  body.light {
+    --bg: linear-gradient(160deg, #faf7ff 0%, #f0f4ff 60%, #f5fffe 100%);
+    --bg-solid: #f4f1fb;
+    --header-bg: rgba(255,255,255,0.97);
+    --header-border: rgba(109,40,217,0.12);
+    --text: #12082a;
+    --text-muted: #6d5a8a;
+    --text-mid: #4a3870;
+    --text-strong: #1e0a4a;
+    --text-accent: #6d28d9;
+    --surface: #ffffff;
+    --surface2: #f7f4ff;
+    --surface3: #ede9ff;
+    --border: rgba(109,40,217,0.14);
+    --border2: rgba(109,40,217,0.09);
+    --border3: rgba(109,40,217,0.22);
+    --pill-inactive: #7c6a9a;
+    --tab-active-bg: rgba(109,40,217,0.1);
+    --check-empty: #e8e2f8;
+    --check-border: rgba(109,40,217,0.3);
+    --ring-track: #e2daf5;
+    --modal-bg: #ffffff;
+    --day-modal-bg: #faf8ff;
+    --input-bg: #f7f4ff;
+    --input-border: rgba(109,40,217,0.25);
+    --weekday-inactive: #9585b8;
+    --weekday-future: #d4cce8;
+    --day-past: #5a4880;
+    --day-future: #d0c8e8;
+    --plan-border: rgba(109,40,217,0.09);
+    --shadow-card: 0 2px 12px rgba(109,40,217,0.08), 0 1px 3px rgba(0,0,0,0.05);
+    --shadow-header: 0 2px 16px rgba(109,40,217,0.1);
+  }
+
+  body.light .header {
+    box-shadow: var(--shadow-header, none);
+  }
+  body.light .prog-card,
+  body.light .dual-prog-card,
+  body.light .task-btn,
+  body.light .ernaehr-today-card,
+  body.light .weekstrip,
+  body.light .cal-stats,
+  body.light .cal-legend,
+  body.light .plan-box,
+  body.light .info-box,
+  body.light .weight-item,
+  body.light .next-goal-card,
+  body.light .goal-card {
+    box-shadow: var(--shadow-card);
+  }
+  body.light .task-btn { background: #ffffff; border-color: rgba(109,40,217,0.12); }
+  body.light .task-btn.done-purple { background: #f0ebff; border-color: rgba(109,40,217,0.35); }
+  body.light .task-btn.done-orange { background: #fff4ec; border-color: rgba(234,88,12,0.3); }
+  body.light .task-btn.done-green  { background: #edfbf5; border-color: rgba(16,185,129,0.3); }
+  body.light .task-btn.done-blue   { background: #eff9ff; border-color: rgba(14,165,233,0.3); }
+  body.light .sec-head .title { color: #1e0a4a; }
+  body.light .sec-head .sub { color: #8878aa; }
+  body.light .dual-prog-card { background: #ffffff; }
+  body.light .dual-prog-label { color: #8878aa; }
+  body.light .dual-prog-count { color: #12082a; }
+  body.light .dual-prog-hint { color: #7c6a9a; }
+  body.light .dual-prog-divider { background: rgba(109,40,217,0.1); }
+  body.light .weekstrip { background: #f7f4ff; }
+  body.light .weekday { color: #8878aa; }
+  body.light .tab { color: #8878aa; }
+  body.light .tab.active { color: #6d28d9; background: rgba(109,40,217,0.09); }
+  body.light .training-section-badge.daily-badge { background: rgba(109,40,217,0.1); color: #6d28d9; border-color: rgba(109,40,217,0.25); }
+  body.light .training-section-badge.weekly-badge { background: rgba(14,165,233,0.1); color: #0284c7; border-color: rgba(14,165,233,0.25); }
+  body.light .cal-day { background: #f2eeff; }
+  body.light .cal-day.past-day { color: #5a4880; }
+  body.light .cal-day.future-day { background: #f5f3fa; color: #ccc5df; }
+  body.light .cal-day-header { color: #9585b8; }
+  body.light .plan-box { background: #f7f4ff; border-color: rgba(109,40,217,0.1); }
+  body.light .info-box.blue { background: rgba(14,165,233,0.07); border-color: rgba(14,165,233,0.2); }
+  body.light .ms-body { background: #fafafa; }
+  body.light .ms-body.achieved { background: #edfbf5; }
+  body.light .ms-body.missed   { background: #fff7ed; }
+  body.light .ms-body.pending  { background: #f5f0ff; }
+  body.light .ms-side { }
+  body.light .ms-date-label { color: #4a3870; }
+  body.light .ms-val-title { color: #8878aa; }
+  body.light .ms-divider { background: rgba(109,40,217,0.1); }
+  body.light .next-goal-box { background: #f7f4ff; border-color: rgba(109,40,217,0.12); }
+  body.light .next-goal-box-label { color: #8878aa; }
+  body.light .next-goal-box-val { color: #12082a; }
+  body.light .day-edit-row { background: #f7f4ff; border-color: rgba(109,40,217,0.12); }
+  body.light .day-edit-row.done-purple { background: #f0ebff; border-color: rgba(109,40,217,0.35); }
+  body.light .day-edit-row.done-orange { background: #fff4ec; border-color: rgba(234,88,12,0.3); }
+  body.light .day-edit-row.done-green  { background: #edfbf5; border-color: rgba(16,185,129,0.3); }
+  body.light .day-edit-row.done-blue   { background: #eff9ff; border-color: rgba(14,165,233,0.3); }
+  body.light .modal { box-shadow: 0 -8px 40px rgba(0,0,0,0.12); }
+  body.light .day-modal { box-shadow: 0 -8px 40px rgba(0,0,0,0.12); }
+  body.light .ernaehr-rate-btn { background: #f7f4ff; border-color: rgba(109,40,217,0.14); }
+  body.light .cal-stat-bar-wrap { background: #e8e3f5; }
+  body.light .cal-stats { background: #f7f4ff; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overflow-x: hidden; }
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 90px;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+  input { font-family: inherit; }
+  ::-webkit-scrollbar { display: none; }
+
+  /* Header */
+  .header {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--header-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--header-border);
+    padding: 18px 18px 0;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+  .app-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 700; color: var(--text-strong); letter-spacing: -0.5px; line-height: 1; }
+  .app-motto { font-size: 11px; color: var(--text-muted); margin-top: 3px; letter-spacing: 0.3px; font-style: italic; }
+  .app-date { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .header-btns { display: flex; align-items: center; gap: 8px; }
+  .theme-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--surface3); border: 1px solid var(--border3);
+    font-size: 16px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+  }
+  .theme-btn:active { transform: scale(0.9); }
+  .weight-btn {
+    background: linear-gradient(135deg, #7e22ce, #4338ca);
+    border-radius: 22px; padding: 8px 14px;
+    font-size: 12px; font-weight: 600; color: #f3e8ff;
+    box-shadow: 0 4px 16px rgba(126,34,206,0.35);
+    display: flex; align-items: center; gap: 6px;
+    transition: box-shadow 0.2s;
+  }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 6px; }
+  .tab {
+    flex: 1; padding: 9px 4px; border-radius: 12px 12px 0 0;
+    font-size: 13px; font-weight: 400; color: var(--pill-inactive);
+    border-bottom: 2px solid transparent; transition: all 0.2s;
+  }
+  .tab.active { background: var(--tab-active-bg); color: var(--text-accent); font-weight: 700; border-bottom: 2px solid #c084fc; }
+
+  /* Content */
+  .content { padding: 20px 18px; max-width: 520px; margin: 0 auto; }
+  .page { display: none; animation: fadeUp 0.32s ease both; }
+  .page.active { display: block; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  /* Progress card */
+  .prog-card {
+    background: var(--surface); border-radius: 22px;
+    padding: 18px 20px; margin-bottom: 4px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; gap: 18;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .prog-ring-wrap { position: relative; flex-shrink: 0; }
+  .prog-ring-label {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700; line-height: 1;
+  }
+  .prog-info .label { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
+  .prog-info .count { font-size: 22px; font-weight: 700; color: var(--text); }
+  .prog-info .hint { font-size: 12px; color: var(--text-mid); margin-top: 4px; }
+
+  /* Section header */
+  .sec-head { display: flex; align-items: center; gap: 10; margin: 22px 0 10px; }
+  .sec-head .emoji { font-size: 20px; }
+  .sec-head .title { font-size: 15px; font-weight: 700; color: var(--text-strong); letter-spacing: -0.2px; }
+  .sec-head .sub { font-size: 11px; color: var(--text-muted); }
+
+  /* Task button */
+  .task-btn {
+    width: 100%; display: flex; align-items: center; gap: 14;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 13px 16px; margin-bottom: 8px;
+    text-align: left; transition: all 0.18s ease;
+  }
+  .task-btn.done-purple { background: rgba(192,132,252,0.12); border-color: rgba(192,132,252,0.35); }
+  .task-btn.done-orange { background: rgba(251,146,60,0.12); border-color: rgba(251,146,60,0.35); }
+  .task-btn.done-green  { background: rgba(52,211,153,0.12); border-color: rgba(52,211,153,0.35); }
+  .task-btn.done-blue   { background: rgba(56,189,248,0.12); border-color: rgba(56,189,248,0.35); }
+  .check-circle {
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    background: var(--check-empty); border: 2px solid var(--check-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: #fff; transition: all 0.2s cubic-bezier(.34,1.56,.64,1);
+  }
+  .check-circle.done-purple { background: #c084fc; border: none; }
+  .check-circle.done-orange { background: #fb923c; border: none; }
+  .check-circle.done-green  { background: #34d399; border: none; }
+  .check-circle.done-blue   { background: #38bdf8; border: none; }
+  .task-label { font-size: 14px; font-weight: 500; color: var(--text-muted); }
+  .task-label.done { color: var(--text); }
+  .task-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; opacity: 0.7; }
+  .task-sub.done-purple { color: rgba(192,132,252,0.8); opacity: 1; }
+  .task-sub.done-orange { color: rgba(251,146,60,0.8); opacity: 1; }
+  .task-sub.done-green  { color: rgba(52,211,153,0.8); opacity: 1; }
+  .task-sub.done-blue   { color: rgba(56,189,248,0.8); opacity: 1; }
+  .task-star { margin-left: auto; font-size: 13px; }
+
+  /* Weekday strip */
+  .weekstrip { display: flex; gap: 5px; margin-bottom: 20px; background: var(--surface2); border-radius: 14px; padding: 10px; border: 1px solid var(--border2); }
+  .weekday { flex: 1; text-align: center; border-radius: 9px; padding: 7px 2px; border: 1px solid transparent; font-size: 11px; color: var(--weekday-inactive); position: relative; transition: all 0.15s; }
+  .weekday.today { background: rgba(192,132,252,0.2); border-color: rgba(192,132,252,0.3); color: #d8b4fe; font-weight: 700; }
+  .weekday.past { cursor: pointer; color: #6b5a8a; }
+  .weekday.past:active { transform: scale(0.93); }
+  .weekday.done-day { background: rgba(52,211,153,0.15); border-color: rgba(52,211,153,0.4); color: #34d399; font-weight: 700; }
+  .weekday.done-day.today { background: rgba(52,211,153,0.22); border-color: rgba(52,211,153,0.5); }
+  .weekday.partial-day { background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.3); color: #fbbf24; }
+  .weekday.future { color: #2a2240; }
+  .day-check { font-size: 9px; display: block; margin-top: 2px; }
+  .day-pct { font-size: 9px; display: block; margin-top: 2px; opacity: 0.8; }
+
+  /* Day detail modal */
+  .day-modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.72);
+    display: none; align-items: flex-end; justify-content: center;
+    z-index: 200; padding: 0 16px 20px;
+  }
+  .day-modal-overlay.open { display: flex; }
+  .day-modal {
+    background: var(--day-modal-bg); border-radius: 24px; padding: 24px 24px 28px;
+    width: 100%; max-width: 440px;
+    border: 1px solid rgba(192,132,252,0.2);
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.4);
+    max-height: 80vh; overflow-y: auto;
+  }
+  .day-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+  .day-modal-title { font-size: 17px; font-weight: 700; color: var(--text-strong); }
+  .day-modal-close { font-size: 22px; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 0 4px; }
+  .day-modal-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-bottom: 16px; }
+  .day-modal-badge.full { background: rgba(52,211,153,0.15); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+  .day-modal-badge.partial { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.25); }
+  .day-modal-badge.none { background: var(--surface3); color: var(--text-muted); border: 1px solid var(--border); }
+  .day-task-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border2); }
+  .day-task-row:last-child { border-bottom: none; }
+  .day-task-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+  .day-task-icon.ok { background: #34d399; color: #fff; }
+  .day-task-icon.nok { background: var(--surface3); color: var(--text-muted); border: 1px solid var(--border); }
+  .day-task-name { font-size: 13px; color: var(--text-muted); }
+  .day-task-name.ok { color: var(--text-accent); }
+
+  /* Editable task rows in day modal */
+  .day-edit-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px; margin-bottom: 6px; border-radius: 13px;
+    background: var(--surface2); border: 1.5px solid var(--border);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .day-edit-row:active { transform: scale(0.98); }
+  .day-edit-row.done-purple { background: rgba(192,132,252,0.12); border-color: rgba(192,132,252,0.35); }
+  .day-edit-row.done-orange { background: rgba(251,146,60,0.12);  border-color: rgba(251,146,60,0.35); }
+  .day-edit-row.done-green  { background: rgba(52,211,153,0.12);  border-color: rgba(52,211,153,0.35); }
+  .day-edit-row.done-blue   { background: rgba(56,189,248,0.12);  border-color: rgba(56,189,248,0.35); }
+  .day-edit-check {
+    width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+    background: var(--check-empty); border: 2px solid var(--check-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: #fff; transition: all 0.18s cubic-bezier(.34,1.56,.64,1);
+  }
+  .day-edit-check.done-purple { background: #c084fc; border: none; }
+  .day-edit-check.done-orange { background: #fb923c; border: none; }
+  .day-edit-check.done-green  { background: #34d399; border: none; }
+  .day-edit-check.done-blue   { background: #38bdf8; border: none; }
+  .day-edit-label { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+  .day-edit-label.done { color: var(--text); }
+
+  /* Info box */
+  .info-box { border-radius: 16px; padding: 16px; margin-top: 20px; }
+  .info-box.blue { background: rgba(56,189,248,0.07); border: 1px solid rgba(56,189,248,0.15); }
+  .info-box-title { font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+  .info-box.blue .info-box-title { color: #7dd3fc; }
+  .info-row { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; display: flex; gap: 6px; }
+  .info-row span { color: #38bdf8; }
+
+  /* Goal page */
+  .goal-card {
+    background: linear-gradient(135deg, rgba(126,34,206,0.2), rgba(67,56,202,0.15));
+    border-radius: 22px; padding: 20px; margin-bottom: 20px;
+    border: 1px solid rgba(192,132,252,0.2);
+  }
+  .goal-label { font-size: 12px; color: #9b7dcc; margin-bottom: 6px; letter-spacing: 1px; }
+  .goal-value { font-size: 28px; font-weight: 700; color: var(--text-strong); letter-spacing: -1px; }
+  .goal-hint { font-size: 13px; color: #7c5cbf; margin-top: 4px; }
+
+  .section-title { font-size: 15px; font-weight: 700; color: var(--text-strong); margin-bottom: 12px; }
+
+  .weight-item {
+    background: var(--surface); border-radius: 16px;
+    padding: 14px 18px; margin-bottom: 10px;
+    border: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .weight-month { font-size: 12px; color: var(--text-muted); }
+  .weight-val { font-size: 24px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
+  .weight-diff { padding: 7px 14px; border-radius: 20px; font-size: 16px; font-weight: 800; text-align: center; }
+  .weight-diff.ok { background: rgba(52,211,153,0.13); color: #34d399; }
+  .weight-diff.nok { background: rgba(251,146,60,0.13); color: #fb923c; }
+  .weight-diff-sub { font-size: 10px; text-align: center; margin-top: 1px; opacity: 0.7; }
+
+  .weight-total {
+    background: rgba(192,132,252,0.1); border-radius: 16px; padding: 16px;
+    border: 1px solid rgba(192,132,252,0.2); text-align: center; margin-top: 6px;
+  }
+  .weight-total-label { color: #9b7dcc; font-size: 12px; }
+  .weight-total-val { font-size: 30px; font-weight: 800; letter-spacing: -1px; }
+
+  .empty-state {
+    text-align: center; padding: 36px 20px;
+    background: var(--surface2); border-radius: 20px;
+    border: 1px dashed var(--border3);
+  }
+  .empty-emoji { font-size: 36px; margin-bottom: 10px; }
+  .empty-text { color: var(--text-muted); font-size: 14px; }
+  .empty-btn {
+    margin-top: 12px; background: rgba(192,132,252,0.15);
+    border: 1px solid rgba(192,132,252,0.25);
+    border-radius: 12px; padding: 8px 18px;
+    color: #c084fc; font-size: 13px; cursor: pointer;
+  }
+
+  .plan-box {
+    margin-top: 22px; background: var(--surface2);
+    border-radius: 18px; padding: 18px;
+    border: 1px solid var(--border2);
+  }
+  .plan-title { font-size: 13px; font-weight: 700; color: var(--text-strong); margin-bottom: 12px; }
+  .plan-row { display: flex; gap: 12px; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--plan-border); }
+  .plan-row:last-child { padding-bottom: 0; margin-bottom: 0; border-bottom: none; }
+  .plan-row-emoji { font-size: 18px; flex-shrink: 0; }
+  .plan-row-freq { font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .plan-row-desc { font-size: 13px; color: var(--text-mid); margin-top: 2px; }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+    display: none; align-items: flex-end; justify-content: center;
+    z-index: 200; padding: 0 16px 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--modal-bg); border-radius: 24px; padding: 28px;
+    width: 100%; max-width: 440px;
+    border: 1px solid rgba(192,132,252,0.2);
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.4);
+  }
+  .modal-title { font-size: 18px; font-weight: 700; color: var(--text-strong); margin-bottom: 4px; }
+  .modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 22px; }
+  .modal-input-row { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; }
+  .modal-input {
+    flex: 1; background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 14px; padding: 15px 18px;
+    color: var(--text); font-size: 20px; outline: none; font-family: inherit;
+  }
+  .modal-kg { color: var(--text-muted); font-size: 18px; font-weight: 600; }
+  .modal-btns { display: flex; gap: 10px; }
+  .modal-cancel {
+    flex: 1; padding: 13px 0; border-radius: 14px;
+    background: var(--surface3); border: 1px solid var(--border);
+    color: var(--text-muted); font-size: 14px;
+  }
+  .modal-save {
+    flex: 2; padding: 13px 0; border-radius: 14px;
+    background: linear-gradient(135deg, #7e22ce, #4338ca);
+    color: #fff; font-size: 14px; font-weight: 700;
+    box-shadow: 0 4px 20px rgba(126,34,206,0.45);
+  }
+
+  /* ── Ernährung ────────────────────────────────────────── */
+  .ernaehr-today-card {
+    background: var(--surface); border-radius: 20px;
+    padding: 18px 18px 20px; margin-bottom: 18px;
+    border: 1px solid var(--border);
+  }
+  .ernaehr-today-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 4px; }
+  .ernaehr-today-date { font-size: 14px; font-weight: 600; color: var(--text-accent); margin-bottom: 16px; }
+  .ernaehr-btn-row { display: flex; gap: 8px; }
+  .ernaehr-rate-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;
+    background: var(--surface2); border: 2px solid var(--border);
+    border-radius: 16px; padding: 14px 6px; cursor: pointer; transition: all 0.18s ease;
+  }
+  .ernaehr-rate-btn:active { transform: scale(0.95); }
+  .ernaehr-rate-btn.selected-gruen  { background: rgba(52,211,153,0.15); border-color: #34d399; }
+  .ernaehr-rate-btn.selected-orange { background: rgba(251,146,60,0.15); border-color: #fb923c; }
+  .ernaehr-rate-btn.selected-rot    { background: rgba(239,68,68,0.15);  border-color: #ef4444; }
+  .erb-circle { display: block; width: 32px; height: 32px; border-radius: 50%; }
+  .erb-circle.gruen  { background: #34d399; box-shadow: 0 0 12px rgba(52,211,153,0.5); }
+  .erb-circle.orange { background: #fb923c; box-shadow: 0 0 12px rgba(251,146,60,0.5); }
+  .erb-circle.rot    { background: #ef4444; box-shadow: 0 0 12px rgba(239,68,68,0.5); }
+  .erb-label { font-size: 12px; font-weight: 700; color: var(--text-accent); }
+  .erb-sub   { font-size: 10px; color: var(--text-muted); }
+  .erb-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+  .erb-dot.gruen  { background: #34d399; }
+  .erb-dot.orange { background: #fb923c; }
+  .erb-dot.rot    { background: #ef4444; }
+  .erb-dot.leer   { background: var(--surface3); border: 1px solid var(--border3); }
+
+  /* Calendar nav */
+  .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .cal-nav-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--surface3); border: 1px solid var(--border3);
+    color: var(--text-accent); font-size: 20px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .cal-nav-btn:active { background: rgba(192,132,252,0.2); }
+  .cal-month-label { font-size: 16px; font-weight: 700; color: var(--text-strong); }
+
+  /* Calendar grid */
+  .cal-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 5px; margin-bottom: 16px;
+  }
+  .cal-day-header {
+    text-align: center; font-size: 10px; font-weight: 700;
+    color: var(--text-muted); padding: 4px 0; letter-spacing: 0.3px;
+  }
+  .cal-day {
+    aspect-ratio: 1; border-radius: 10px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    border: 1.5px solid transparent; transition: all 0.15s; position: relative;
+    background: var(--surface2);
+  }
+  .cal-day.empty { background: none; cursor: default; }
+  .cal-day.today-marker { border-color: rgba(192,132,252,0.5); color: #d8b4fe; }
+  .cal-day.future-day { color: var(--day-future); cursor: default; }
+  .cal-day.past-day { color: var(--day-past); }
+  .cal-day.gruen  { background: rgba(52,211,153,0.18); border-color: rgba(52,211,153,0.4); color: #34d399; }
+  .cal-day.orange { background: rgba(251,146,60,0.18);  border-color: rgba(251,146,60,0.4);  color: #fb923c; }
+  .cal-day.rot    { background: rgba(239,68,68,0.18);   border-color: rgba(239,68,68,0.4);   color: #fca5a5; }
+  .cal-day:not(.empty):not(.future-day):active { transform: scale(0.9); }
+  .cal-day-num { font-size: 13px; font-weight: 700; line-height: 1; }
+  .cal-day-dot { width: 5px; height: 5px; border-radius: 50%; margin-top: 3px; }
+  .cal-day.gruen  .cal-day-dot { background: #34d399; }
+  .cal-day.orange .cal-day-dot { background: #fb923c; }
+  .cal-day.rot    .cal-day-dot { background: #ef4444; }
+
+  /* Legend */
+  .cal-legend {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    margin-bottom: 18px; padding: 12px 14px;
+    background: var(--surface2); border-radius: 12px;
+    border: 1px solid var(--border2);
+  }
+  .cal-legend-item { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; }
+
+  /* Monthly stats */
+  .cal-stats {
+    background: var(--surface2); border-radius: 16px; padding: 16px;
+    border: 1px solid var(--border2);
+  }
+  .cal-stats-title { font-size: 13px; font-weight: 700; color: var(--text-strong); margin-bottom: 12px; }
+  .cal-stats-bars { display: flex; flex-direction: column; gap: 8px; }
+  .cal-stat-row { display: flex; align-items: center; gap: 10px; }
+  .cal-stat-name { font-size: 12px; color: var(--text-muted); width: 52px; flex-shrink: 0; }
+  .cal-stat-bar-wrap { flex: 1; background: var(--surface3); border-radius: 99px; height: 8px; overflow: hidden; }
+  .cal-stat-bar { height: 100%; border-radius: 99px; transition: width 0.5s ease; }
+  .cal-stat-bar.gruen  { background: #34d399; }
+  .cal-stat-bar.orange { background: #fb923c; }
+  .cal-stat-bar.rot    { background: #ef4444; }
+  .cal-stat-count { font-size: 12px; font-weight: 700; width: 22px; text-align: right; flex-shrink: 0; }
+  .cal-stat-count.gruen  { color: #34d399; }
+  .cal-stat-count.orange { color: #fb923c; }
+  .cal-stat-count.rot    { color: #fca5a5; }
+
+  /* ── Coach ───────────────────────────────────────────── */
+  .coach-card {
+    border-radius: 20px; padding: 18px 20px;
+    background: linear-gradient(135deg, rgba(124,58,237,0.14) 0%, rgba(56,189,248,0.1) 100%);
+    border: 1px solid rgba(124,58,237,0.22);
+    position: relative; overflow: hidden;
+    transition: background 0.3s;
+  }
+  .coach-card::before {
+    content: ''; position: absolute; top: -30px; right: -20px;
+    width: 100px; height: 100px; border-radius: 50%;
+    background: rgba(124,58,237,0.08); pointer-events: none;
+  }
+  body.light .coach-card {
+    background: linear-gradient(135deg, #f0ebff 0%, #eff9ff 100%);
+    border-color: rgba(109,40,217,0.2);
+    box-shadow: var(--shadow-card);
+  }
+  .coach-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .coach-icon {
+    font-size: 22px; width: 44px; height: 44px; border-radius: 14px; flex-shrink: 0;
+    background: rgba(124,58,237,0.18); display: flex; align-items: center; justify-content: center;
+  }
+  body.light .coach-icon { background: rgba(109,40,217,0.12); }
+  .coach-title { font-size: 15px; font-weight: 700; color: var(--text-strong); letter-spacing: -0.2px; }
+  .coach-day { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .coach-tip {
+    font-size: 14px; line-height: 1.65; color: var(--text-mid);
+    border-top: 1px solid rgba(124,58,237,0.12); padding-top: 12px;
+    font-style: italic;
+  }
+  body.light .coach-tip { color: #4a3870; border-top-color: rgba(109,40,217,0.1); }
+
+  /* ── Combined training page ────────────────────────────── */
+  .dual-prog-card {
+    background: var(--surface); border-radius: 22px;
+    padding: 18px 20px; margin-bottom: 16px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; gap: 0;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .dual-prog-col {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; gap: 4px;
+  }
+  .dual-prog-divider {
+    width: 1px; align-self: stretch;
+    background: var(--border); margin: 0 16px;
+  }
+  .dual-prog-ring-wrap { position: relative; }
+  .dual-prog-pct-wrap {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .dual-prog-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; }
+  .dual-prog-count { font-size: 16px; font-weight: 700; color: var(--text); }
+  .dual-prog-hint { font-size: 11px; color: var(--text-mid); text-align: center; }
+
+  /* Section divider badges */
+  .training-section-header { margin-bottom: 4px; }
+  .training-section-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 14px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .daily-badge  { background: rgba(192,132,252,0.14); color: #c084fc; border: 1px solid rgba(192,132,252,0.3); }
+  .daily-badge::before  { content: '●'; font-size: 8px; }
+  .weekly-badge { background: rgba(56,189,248,0.12); color: #38bdf8; border: 1px solid rgba(56,189,248,0.25); }
+  .weekly-badge::before { content: '●'; font-size: 8px; }
+
+  /* SVG ring */
+  .ring-svg { transform: rotate(-90deg); }
+
+  /* Next goal card */
+  .next-goal-card {
+    border-radius: 20px; padding: 18px 20px; margin-bottom: 20px;
+    border: 1px solid rgba(192,132,252,0.25);
+    background: linear-gradient(135deg, rgba(124,58,237,0.18), rgba(67,56,202,0.12));
+  }
+  .next-goal-label { font-size: 10px; color: #7c5cbf; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .next-goal-date { font-size: 13px; font-weight: 600; color: #c4b5fd; margin-bottom: 10px; }
+  .next-goal-row { display: flex; gap: 10px; }
+  .next-goal-box { flex: 1; background: rgba(255,255,255,0.05); border-radius: 14px; padding: 12px 14px; border: 1px solid rgba(255,255,255,0.07); }
+  .next-goal-box-label { font-size: 10px; color: #5b4e78; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .next-goal-box-val { font-size: 20px; font-weight: 800; color: #f0eaf8; letter-spacing: -0.5px; }
+  .next-goal-box-val.target { color: #a78bfa; }
+  .next-goal-box-val.still { color: #fb923c; }
+  .next-goal-box-sub { font-size: 11px; color: #5b4e78; margin-top: 2px; }
+
+  /* Milestone list */
+  .milestone-list { margin-bottom: 22px; }
+  .milestone-row {
+    display: flex; align-items: stretch; gap: 0;
+    margin-bottom: 8px; border-radius: 16px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .ms-side { width: 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; padding: 14px 0; gap: 4px; }
+  .ms-side.achieved { background: rgba(52,211,153,0.18); }
+  .ms-side.missed   { background: rgba(251,146,60,0.15); }
+  .ms-side.pending  { background: rgba(192,132,252,0.12); }
+  .ms-side.future   { background: rgba(255,255,255,0.03); }
+  .ms-side-icon { font-size: 14px; line-height: 1; }
+  .ms-side-num { font-size: 9px; font-weight: 700; letter-spacing: 0.3px; }
+  .ms-side.achieved .ms-side-num { color: #34d399; }
+  .ms-side.missed   .ms-side-num { color: #fb923c; }
+  .ms-side.pending  .ms-side-num { color: #a78bfa; }
+  .ms-side.future   .ms-side-num { color: #3d3053; }
+
+  .ms-body { flex: 1; background: rgba(255,255,255,0.03); padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+  .ms-body.achieved { background: rgba(52,211,153,0.06); }
+  .ms-body.missed   { background: rgba(251,146,60,0.05); }
+  .ms-body.pending  { background: rgba(192,132,252,0.05); }
+  .ms-body.future   { background: rgba(255,255,255,0.02); }
+  .ms-date-label { font-size: 11px; font-weight: 700; color: #7a6a9a; }
+  .ms-date-label.future { color: #2e2546; }
+  .ms-vals-row { display: flex; gap: 10px; align-items: flex-end; }
+  .ms-val-block { display: flex; flex-direction: column; }
+  .ms-val-title { font-size: 9px; text-transform: uppercase; letter-spacing: 0.4px; color: #4a3d63; margin-bottom: 2px; }
+  .ms-val-num { font-size: 17px; font-weight: 800; letter-spacing: -0.5px; }
+  .ms-val-num.actual.achieved { color: #34d399; }
+  .ms-val-num.actual.missed   { color: #fb923c; }
+  .ms-val-num.actual.pending  { color: #c4b5fd; }
+  .ms-val-num.actual.future   { color: #3d3053; }
+  .ms-val-num.goal            { color: #7c5cbf; font-size: 14px; font-weight: 600; }
+  .ms-divider { width: 1px; background: rgba(255,255,255,0.06); align-self: stretch; margin: 0 2px; }
+  .ms-diff-badge { margin-left: auto; align-self: center; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+  .ms-diff-badge.achieved { background: rgba(52,211,153,0.15); color: #34d399; }
+  .ms-diff-badge.missed   { background: rgba(251,146,60,0.13); color: #fb923c; }
+  .ms-diff-badge.pending  { background: rgba(192,132,252,0.1); color: #9b7dcc; font-size: 10px; }
+  .ms-diff-badge.future   { background: rgba(255,255,255,0.04); color: #2e2546; font-size: 10px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="app-title">GreatYou</div>
+      <div class="app-motto">Energievoll, fit, gesund, sexy!</div>
+      <div class="app-date" id="todayDate"></div>
+    </div>
+    <div class="header-btns">
+      <button class="theme-btn" id="themeToggle" onclick="toggleTheme()" title="Hell/Dunkel wechseln">🌙</button>
+      <button class="weight-btn" onclick="openWeightModal()">⚖️ Gewicht</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('training',this)">Training</button>
+    <button class="tab" onclick="showTab('ernaehrung',this)">Ernährung</button>
+    <button class="tab" onclick="showTab('ziel',this)">Ziele</button>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- TRAINING (Heute + Woche kombiniert) -->
+  <div id="page-training" class="page active">
+
+    <!-- Dual progress bar -->
+    <div class="dual-prog-card">
+      <div class="dual-prog-col">
+        <div class="dual-prog-ring-wrap">
+          <svg class="ring-svg" width="68" height="68">
+            <circle cx="34" cy="34" r="27" fill="none" stroke="var(--ring-track)" stroke-width="5"/>
+            <circle id="ring-daily" cx="34" cy="34" r="27" fill="none" stroke="#c084fc" stroke-width="5"
+              stroke-dasharray="169.6" stroke-dashoffset="169.6" stroke-linecap="round"
+              style="transition:stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1)"/>
+          </svg>
+          <div class="dual-prog-pct-wrap"><span id="ring-daily-pct" style="color:#d8b4fe;font-size:14px;font-weight:700">0%</span></div>
+        </div>
+        <div class="dual-prog-label">Heute</div>
+        <div class="dual-prog-count"><span id="daily-done">0</span>/3</div>
+        <div class="dual-prog-hint" id="daily-hint">Los geht's!</div>
+      </div>
+
+      <div class="dual-prog-divider"></div>
+
+      <div class="dual-prog-col">
+        <div class="dual-prog-ring-wrap">
+          <svg class="ring-svg" width="68" height="68">
+            <circle cx="34" cy="34" r="27" fill="none" stroke="var(--ring-track)" stroke-width="5"/>
+            <circle id="ring-weekly" cx="34" cy="34" r="27" fill="none" stroke="#38bdf8" stroke-width="5"
+              stroke-dasharray="169.6" stroke-dashoffset="169.6" stroke-linecap="round"
+              style="transition:stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1)"/>
+          </svg>
+          <div class="dual-prog-pct-wrap"><span id="ring-weekly-pct" style="color:#38bdf8;font-size:14px;font-weight:700">0%</span></div>
+        </div>
+        <div class="dual-prog-label">Woche</div>
+        <div class="dual-prog-count"><span id="weekly-done">0</span>/5</div>
+        <div class="dual-prog-hint" id="weekly-hint">Noch 5</div>
+      </div>
+    </div>
+
+    <!-- Weekday strip -->
+    <div class="weekstrip" id="weekstrip"></div>
+
+    <!-- ── TÄGLICH ── -->
+    <div class="training-section-header">
+      <span class="training-section-badge daily-badge">Täglich</span>
+    </div>
+
+    <div class="sec-head"><span class="emoji">⚡</span><div><div class="title">Tagesroutine</div><div class="sub">Täglich erledigen</div></div></div>
+    <button class="task-btn" id="btn-su" onclick="toggleDaily('su')">
+      <div class="check-circle" id="chk-su"></div>
+      <div><div class="task-label" id="lbl-su">Sit-ups</div><div class="task-sub" id="sub-su">3 × 20 Wdh.</div></div>
+    </button>
+    <button class="task-btn" id="btn-bp" onclick="toggleDaily('bp')">
+      <div class="check-circle" id="chk-bp"></div>
+      <div><div class="task-label" id="lbl-bp">Brustdrücken</div><div class="task-sub" id="sub-bp">3 × 20 Wdh.</div></div>
+    </button>
+    <button class="task-btn" id="btn-viz" onclick="toggleDaily('viz')">
+      <div class="check-circle" id="chk-viz"></div>
+      <div><div class="task-label" id="lbl-viz">Visualisierung</div><div class="task-sub" id="sub-viz">5–10 Min.</div></div>
+    </button>
+
+    <!-- ── WÖCHENTLICH ── -->
+    <div class="training-section-header" style="margin-top:24px">
+      <span class="training-section-badge weekly-badge">Wöchentlich</span>
+    </div>
+
+    <div class="sec-head"><span class="emoji">🏋️</span><div><div class="title">Krafttraining</div><div class="sub">Ziel: 3× · je mind. 30 Min.</div></div></div>
+    <button class="task-btn" id="btn-k1" onclick="toggleWeekly('k1')">
+      <div class="check-circle" id="chk-k1"></div>
+      <div><div class="task-label" id="lbl-k1">Einheit #1</div><div class="task-sub" id="sub-k1">mind. 30 Min.</div></div>
+    </button>
+    <button class="task-btn" id="btn-k2" onclick="toggleWeekly('k2')">
+      <div class="check-circle" id="chk-k2"></div>
+      <div><div class="task-label" id="lbl-k2">Einheit #2</div><div class="task-sub" id="sub-k2">mind. 30 Min.</div></div>
+    </button>
+    <button class="task-btn" id="btn-k3" onclick="toggleWeekly('k3')">
+      <div class="check-circle" id="chk-k3"></div>
+      <div><div class="task-label" id="lbl-k3">Einheit #3</div><div class="task-sub" id="sub-k3">mind. 30 Min.</div></div>
+    </button>
+
+    <div class="sec-head"><span class="emoji">🏃</span><div><div class="title">Ausdauer</div><div class="sub">Ziel: 2× · Wandern / Radeln / Laufen</div></div></div>
+    <button class="task-btn" id="btn-c1" onclick="toggleWeekly('c1')">
+      <div class="check-circle" id="chk-c1"></div>
+      <div><div class="task-label" id="lbl-c1">Einheit #1</div><div class="task-sub" id="sub-c1">Wandern / Radeln / Laufen</div></div>
+    </button>
+    <button class="task-btn" id="btn-c2" onclick="toggleWeekly('c2')">
+      <div class="check-circle" id="chk-c2"></div>
+      <div><div class="task-label" id="lbl-c2">Einheit #2</div><div class="task-sub" id="sub-c2">Wandern / Radeln / Laufen</div></div>
+    </button>
+
+    <!-- Coach -->
+    <div class="coach-card" id="coach-card" style="margin-top:20px;margin-bottom:8px">
+      <div class="coach-header">
+        <span class="coach-icon">💡</span>
+        <div>
+          <div class="coach-title">Coach</div>
+          <div class="coach-day" id="coach-day"></div>
+        </div>
+      </div>
+      <div class="coach-tip" id="coach-tip"></div>
+    </div>
+
+    <!-- Training calendar -->
+    <div style="margin-top:24px">
+      <div class="training-section-header">
+        <span class="training-section-badge" style="background:rgba(167,139,250,0.12);color:#a78bfa;border:1px solid rgba(167,139,250,0.25);">📅 Rückblick</span>
+      </div>
+      <div class="cal-nav" style="margin-top:12px">
+        <button class="cal-nav-btn" onclick="trainCalPrev()">‹</button>
+        <div class="cal-month-label" id="train-cal-month-label"></div>
+        <button class="cal-nav-btn" onclick="trainCalNext()">›</button>
+      </div>
+      <div class="cal-grid" id="train-cal-grid"></div>
+      <div class="cal-legend">
+        <div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#34d399;margin-right:4px;vertical-align:middle"></span> Alle 3 erledigt</div>
+        <div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#fbbf24;margin-right:4px;vertical-align:middle"></span> Teilweise</div>
+        <div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:rgba(239,68,68,0.7);margin-right:4px;vertical-align:middle"></span> Nichts</div>
+      </div>
+      <div id="train-cal-stats" class="cal-stats"></div>
+    </div>
+
+  </div>
+
+  <!-- ERNÄHRUNG -->
+  <div id="page-ernaehrung" class="page">
+
+    <!-- Today rating -->
+    <div class="ernaehr-today-card">
+      <div class="ernaehr-today-label">Heute bewerten</div>
+      <div class="ernaehr-today-date" id="ernaehr-today-date"></div>
+      <div class="ernaehr-btn-row">
+        <button class="ernaehr-rate-btn" id="erb-gruen" onclick="rateToday('gruen')">
+          <span class="erb-circle gruen"></span>
+          <span class="erb-label">Grün</span>
+          <span class="erb-sub">Super Tag!</span>
+        </button>
+        <button class="ernaehr-rate-btn" id="erb-orange" onclick="rateToday('orange')">
+          <span class="erb-circle orange"></span>
+          <span class="erb-label">Orange</span>
+          <span class="erb-sub">Okay</span>
+        </button>
+        <button class="ernaehr-rate-btn" id="erb-rot" onclick="rateToday('rot')">
+          <span class="erb-circle rot"></span>
+          <span class="erb-label">Rot</span>
+          <span class="erb-sub">Nicht gut</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Month nav -->
+    <div class="cal-nav">
+      <button class="cal-nav-btn" onclick="calPrevMonth()">‹</button>
+      <div class="cal-month-label" id="cal-month-label"></div>
+      <button class="cal-nav-btn" onclick="calNextMonth()">›</button>
+    </div>
+
+    <!-- Calendar -->
+    <div class="cal-grid" id="cal-grid"></div>
+
+    <!-- Legend -->
+    <div class="cal-legend">
+      <div class="cal-legend-item"><span class="erb-dot gruen"></span> Grün – super</div>
+      <div class="cal-legend-item"><span class="erb-dot orange"></span> Orange – okay</div>
+      <div class="cal-legend-item"><span class="erb-dot rot"></span> Rot – nicht gut</div>
+      <div class="cal-legend-item"><span class="erb-dot leer"></span> Kein Eintrag</div>
+    </div>
+
+    <!-- Monthly stats -->
+    <div class="cal-stats" id="cal-stats"></div>
+
+  </div>
+
+  <!-- ZIEL -->
+  <div id="page-ziel" class="page">
+    <div class="goal-card">
+      <div class="goal-label">GESAMTZIEL</div>
+      <div class="goal-value">81,3 → 70,8 kg</div>
+      <div class="goal-hint">−1,5 kg/Monat · gemessen am 15. · bis 15. Dezember 2026</div>
+    </div>
+
+    <div id="next-goal-section"></div>
+
+    <div class="section-title">📅 Meilensteine – jeweils am 15.</div>
+    <div id="milestone-list" class="milestone-list"></div>
+
+    <div class="plan-box">
+      <div class="plan-title">📋 Dein Gesamtplan</div>
+      <div class="plan-row"><span class="plan-row-emoji">🏋️</span><div><div class="plan-row-freq">Täglich</div><div class="plan-row-desc">3×20 Sit-ups + 3×20 Brustdrücken</div></div></div>
+      <div class="plan-row"><span class="plan-row-emoji">🧘</span><div><div class="plan-row-freq">Täglich</div><div class="plan-row-desc">Visualisierung (5–10 Min.)</div></div></div>
+      <div class="plan-row"><span class="plan-row-emoji">💪</span><div><div class="plan-row-freq">Wöchentlich</div><div class="plan-row-desc">3× Krafttraining à 30 Min.</div></div></div>
+      <div class="plan-row"><span class="plan-row-emoji">🏃</span><div><div class="plan-row-freq">Wöchentlich</div><div class="plan-row-desc">2× Ausdauer (Wandern/Radeln/Laufen)</div></div></div>
+      <div class="plan-row"><span class="plan-row-emoji">⚖️</span><div><div class="plan-row-freq">Monatsziel</div><div class="plan-row-desc">−1,5 kg alle 4 Wochen (gemessen am 15.)</div></div></div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<!-- DAY DETAIL MODAL -->
+<div class="day-modal-overlay" id="dayModal">
+  <div class="day-modal">
+    <div class="day-modal-header">
+      <div class="day-modal-title" id="dayModalTitle"></div>
+      <button class="day-modal-close" onclick="closeDayModal()">✕</button>
+    </div>
+    <div id="dayModalBadge"></div>
+    <div id="dayModalTasks"></div>
+  </div>
+</div>
+
+<!-- WEIGHT MODAL -->
+<div class="modal-overlay" id="weightModal">
+  <div class="modal">
+    <div class="modal-title">Gewicht eintragen</div>
+    <div class="modal-sub" id="modalMonthLabel"></div>
+    <div class="modal-input-row">
+      <input class="modal-input" id="weightInput" type="number" step="0.1" placeholder="z.B. 72.5" inputmode="decimal">
+      <span class="modal-kg">kg</span>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeWeightModal()">Abbrechen</button>
+      <button class="modal-save" onclick="saveWeight()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Helpers ──────────────────────────────────────────────────────────────────
+function todayKey() { return new Date().toISOString().slice(0,10); }
+
+// ISO week-start (Monday) for any date
+function weekKeyFor(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  const day = d.getDay() === 0 ? 7 : d.getDay(); // 1=Mon..7=Sun
+  const mon = new Date(d);
+  mon.setDate(d.getDate() - day + 1);
+  return mon.toISOString().slice(0,10);
+}
+function weekKey() { return weekKeyFor(todayKey()); }
+function monthKey() { return new Date().toISOString().slice(0,7); }
+function weekdayIdx() { const d = new Date().getDay(); return d === 0 ? 6 : d - 1; }
+
+function loadLS(key, fallback = {}) {
+  try {
+    const v = localStorage.getItem(key);
+    if (v === null) return fallback;
+    const parsed = JSON.parse(v);
+    return (parsed !== null && typeof parsed === 'object') ? parsed : fallback;
+  } catch { return fallback; }
+}
+function saveLS(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} }
+
+// ── State ────────────────────────────────────────────────────────────────────
+// daily stored as 'daily-YYYY-MM-DD' → {su:bool, bp:bool, viz:bool}
+// weekly stored as 'weekly-YYYY-MM-DD' (Monday of week) → {k1..c2:bool}
+let daily  = loadLS('daily-' + todayKey());
+let weekly = loadLS('weekly-' + weekKey());
+let weights = loadLS('weights', {});
+
+const DAILY_TASKS  = ['su', 'bp', 'viz'];
+const WEEKLY_TASKS = ['k1', 'k2', 'k3', 'c1', 'c2'];
+const WEEKDAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+
+// ── Date helpers ──────────────────────────────────────────────────────────────
+function getDateKeyForWeekday(weekdayI, referenceMonday) {
+  // weekdayI: 0=Mon..6=Sun relative to a Monday
+  const mon = referenceMonday
+    ? new Date(referenceMonday + 'T12:00:00')
+    : (() => {
+        const d = new Date();
+        const day = d.getDay() === 0 ? 7 : d.getDay();
+        const m = new Date(d); m.setDate(d.getDate() - day + 1); return m;
+      })();
+  const target = new Date(mon);
+  target.setDate(mon.getDate() + weekdayI);
+  return target.toISOString().slice(0, 10);
+}
+
+// ── Weekstrip (current week only) ────────────────────────────────────────────
+function buildWeekstrip() {
+  const strip = document.getElementById('weekstrip');
+  strip.innerHTML = '';
+  const todayI = weekdayIdx();
+  const currentWeekMon = weekKey();
+
+  WEEKDAYS.forEach((d, i) => {
+    const dateKey = getDateKeyForWeekday(i, currentWeekMon);
+    const isPast   = i < todayI;
+    const isToday  = i === todayI;
+    const isFuture = i > todayI;
+
+    const dayData  = loadLS('daily-' + dateKey);
+    const doneCount = DAILY_TASKS.filter(id => dayData[id]).length;
+    const isComplete = doneCount === DAILY_TASKS.length;
+    const isPartial  = doneCount > 0 && !isComplete;
+
+    const el = document.createElement('div');
+    let cls = 'weekday';
+    if (isToday) cls += ' today';
+    if (!isFuture) {
+      if (isComplete) cls += ' done-day';
+      else if (isPartial) cls += ' partial-day';
+    }
+    if (isPast)   cls += ' past';
+    if (isFuture) cls += ' future';
+    el.className = cls;
+
+    let indicator = '';
+    if (!isFuture && isComplete) indicator = '<span class="day-check">✓</span>';
+    else if (!isFuture && isPartial) indicator = `<span class="day-pct">${doneCount}/3</span>`;
+    else if (isPast && doneCount === 0) indicator = '<span class="day-pct">–</span>';
+
+    el.innerHTML = `<span>${d}</span>${indicator}`;
+    if (!isFuture) {
+      el.style.cursor = 'pointer';
+      el.onclick = () => openDayModal(i, dateKey, currentWeekMon);
+    }
+    strip.appendChild(el);
+  });
+}
+
+// ── Training calendar ─────────────────────────────────────────────────────────
+let trainCalYear  = new Date().getFullYear();
+let trainCalMonth = new Date().getMonth();
+
+function trainCalPrev() {
+  trainCalMonth--;
+  if (trainCalMonth < 0) { trainCalMonth = 11; trainCalYear--; }
+  renderTrainCalendar();
+}
+function trainCalNext() {
+  const now = new Date();
+  if (trainCalYear > now.getFullYear() || (trainCalYear === now.getFullYear() && trainCalMonth >= now.getMonth())) return;
+  trainCalMonth++;
+  if (trainCalMonth > 11) { trainCalMonth = 0; trainCalYear++; }
+  renderTrainCalendar();
+}
+
+function renderTrainCalendar() {
+  const yr = trainCalYear, mo = trainCalMonth;
+  const today = todayKey();
+  document.getElementById('train-cal-month-label').textContent =
+    new Date(yr, mo, 1).toLocaleDateString('de-AT', { month: 'long', year: 'numeric' });
+
+  const firstDay   = new Date(yr, mo, 1).getDay();
+  const startOffset = firstDay === 0 ? 6 : firstDay - 1;
+  const daysInMonth = new Date(yr, mo + 1, 0).getDate();
+
+  let html = '';
+  ['Mo','Di','Mi','Do','Fr','Sa','So'].forEach(d => {
+    html += `<div class="cal-day-header">${d}</div>`;
+  });
+  for (let i = 0; i < startOffset; i++) html += `<div class="cal-day empty"></div>`;
+
+  let totalDays = 0, complete = 0, partial = 0, missed = 0;
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dk = `${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isFuture = dk > today;
+    const isToday  = dk === today;
+    const dayData  = loadLS('daily-' + dk);
+    const doneCount = DAILY_TASKS.filter(id => dayData[id]).length;
+    const isComplete = doneCount === DAILY_TASKS.length;
+    const isPartial  = doneCount > 0 && !isComplete;
+
+    if (!isFuture) {
+      totalDays++;
+      if (isComplete) complete++;
+      else if (isPartial) partial++;
+      else missed++;
+    }
+
+    let cls = 'cal-day';
+    if (isFuture) cls += ' future-day';
+    else if (isToday) cls += ' today-marker';
+    else cls += ' past-day';
+
+    // Color coding
+    if (!isFuture) {
+      if (isComplete) cls += ' gruen';
+      else if (isPartial) cls += ' orange';
+      else cls += ' rot';
+    }
+
+    const dot = (!isFuture && doneCount > 0) ? '<div class="cal-day-dot"></div>' : '';
+    const clickAttr = !isFuture
+      ? `onclick="openDayModal(${new Date(dk+'T12:00:00').getDay()===0?6:new Date(dk+'T12:00:00').getDay()-1},'${dk}','${weekKeyFor(dk)}')"` : '';
+
+    html += `<div class="${cls}" ${clickAttr}>
+      <div class="cal-day-num">${d}</div>${dot}
+    </div>`;
+  }
+
+  document.getElementById('train-cal-grid').innerHTML = html;
+
+  // Stats
+  const statsEl = document.getElementById('train-cal-stats');
+  if (totalDays === 0) { statsEl.innerHTML = ''; return; }
+  const pctC = Math.round(complete/totalDays*100);
+  const pctP = Math.round(partial/totalDays*100);
+  const pctM = Math.round(missed/totalDays*100);
+  const monthName = new Date(yr, mo, 1).toLocaleDateString('de-AT', {month:'long'});
+  statsEl.innerHTML = `<div class="cal-stats-title">📊 ${monthName} im Überblick</div>
+  <div class="cal-stats-bars">
+    <div class="cal-stat-row">
+      <div class="cal-stat-name">✅ Alle 3</div>
+      <div class="cal-stat-bar-wrap"><div class="cal-stat-bar gruen" style="width:${pctC}%"></div></div>
+      <div class="cal-stat-count gruen">${complete}</div>
+    </div>
+    <div class="cal-stat-row">
+      <div class="cal-stat-name">⚡ Teils</div>
+      <div class="cal-stat-bar-wrap"><div class="cal-stat-bar orange" style="width:${pctP}%"></div></div>
+      <div class="cal-stat-count orange">${partial}</div>
+    </div>
+    <div class="cal-stat-row">
+      <div class="cal-stat-name">❌ Nichts</div>
+      <div class="cal-stat-bar-wrap"><div class="cal-stat-bar rot" style="width:${pctM}%"></div></div>
+      <div class="cal-stat-count rot">${missed}</div>
+    </div>
+  </div>`;
+}
+
+// ── Daily ─────────────────────────────────────────────────────────────────────
+function toggleDaily(id) {
+  daily[id] = !daily[id];
+  saveLS('daily-' + todayKey(), daily);
+  renderDaily();
+  buildWeekstrip();
+  renderTrainCalendar();
+}
+
+function renderDaily() {
+  const colorMap = { su: 'purple', bp: 'purple', viz: 'green' };
+  DAILY_TASKS.forEach(id => {
+    const done   = !!daily[id];
+    const accent = colorMap[id];
+    const btn = document.getElementById('btn-' + id);
+    const chk = document.getElementById('chk-' + id);
+    const lbl = document.getElementById('lbl-' + id);
+    const sub = document.getElementById('sub-' + id);
+    if (!btn) return;
+    btn.className = 'task-btn' + (done ? ' done-' + accent : '');
+    chk.className = 'check-circle' + (done ? ' done-' + accent : '');
+    chk.textContent = done ? '✓' : '';
+    lbl.className = 'task-label' + (done ? ' done' : '');
+    sub.className = 'task-sub' + (done ? ' done-' + accent : '');
+  });
+
+  const done   = DAILY_TASKS.filter(id => daily[id]).length;
+  const pct    = Math.round(done / DAILY_TASKS.length * 100);
+  const circ   = 169.6;
+  const offset = circ - (pct / 100) * circ;
+  const ring   = document.getElementById('ring-daily');
+  ring.style.strokeDashoffset = offset;
+  ring.style.stroke = pct === 100 ? '#34d399' : '#c084fc';
+  document.getElementById('ring-daily-pct').textContent = pct + '%';
+  document.getElementById('ring-daily-pct').style.color = pct === 100 ? '#34d399' : '#d8b4fe';
+  document.getElementById('daily-done').textContent = done;
+  document.getElementById('daily-hint').textContent =
+    pct === 100 ? '🎉 Geschafft!' : done === 0 ? 'Los geht\'s!' : `Noch ${DAILY_TASKS.length - done} übrig`;
+  document.getElementById('daily-hint').style.color = pct === 100 ? '#34d399' : '#8b7aaa';
+}
+
+// ── Weekly ────────────────────────────────────────────────────────────────────
+function toggleWeekly(id) {
+  weekly[id] = !weekly[id];
+  saveLS('weekly-' + weekKey(), weekly);
+  renderWeekly();
+}
+
+function renderWeekly() {
+  const colorMap = { k1: 'blue', k2: 'blue', k3: 'blue', c1: 'green', c2: 'green' };
+  WEEKLY_TASKS.forEach(id => {
+    const done   = !!weekly[id];
+    const accent = colorMap[id];
+    const btn = document.getElementById('btn-' + id);
+    const chk = document.getElementById('chk-' + id);
+    const lbl = document.getElementById('lbl-' + id);
+    const sub = document.getElementById('sub-' + id);
+    if (!btn) return;
+    btn.className = 'task-btn' + (done ? ' done-' + accent : '');
+    chk.className = 'check-circle' + (done ? ' done-' + accent : '');
+    chk.textContent = done ? '✓' : '';
+    lbl.className = 'task-label' + (done ? ' done' : '');
+    sub.className = 'task-sub' + (done ? ' done-' + accent : '');
+  });
+
+  const done   = WEEKLY_TASKS.filter(id => weekly[id]).length;
+  const pct    = Math.round(done / WEEKLY_TASKS.length * 100);
+  const circ   = 169.6;
+  const offset = circ - (pct / 100) * circ;
+  const ring   = document.getElementById('ring-weekly');
+  ring.style.strokeDashoffset = offset;
+  ring.style.stroke = pct === 100 ? '#34d399' : '#38bdf8';
+  document.getElementById('ring-weekly-pct').textContent = pct + '%';
+  document.getElementById('ring-weekly-pct').style.color = pct === 100 ? '#34d399' : '#38bdf8';
+  document.getElementById('weekly-done').textContent = done;
+  document.getElementById('weekly-hint').textContent =
+    pct === 100 ? '🎉 Perfekte Woche!' : `Noch ${WEEKLY_TASKS.length - done}`;
+}
+
+// ── Milestones ────────────────────────────────────────────────────────────────
+// Fixed milestones: 15.05.2026 → 15.12.2026
+// Start: 81.3 kg, End: 70.8 kg → 8 intervals of 1.3125 kg ≈ round to 1.5 steps
+// Fixed targets per milestone:
+const MILESTONE_DATES = [
+  '2026-05-15','2026-06-15','2026-07-15','2026-08-15',
+  '2026-09-15','2026-10-15','2026-11-15','2026-12-15'
+];
+const START_WEIGHT = 81.3;
+const END_WEIGHT   = 70.8;
+const STEPS = MILESTONE_DATES.length - 1; // 7 steps
+const STEP_SIZE = +((START_WEIGHT - END_WEIGHT) / STEPS).toFixed(4); // ~1.5
+
+// Pre-computed target for each milestone index
+function getMilestoneTarget(idx) {
+  return +(START_WEIGHT - idx * STEP_SIZE).toFixed(1);
+}
+
+function getWeightOnOrBefore(dateKey) {
+  const allDates = Object.keys(weights).sort();
+  let best = null;
+  for (const d of allDates) {
+    if (d <= dateKey) best = d;
+  }
+  return best ? weights[best] : null;
+}
+
+function getLastWeight() {
+  const allDates = Object.keys(weights).sort();
+  if (!allDates.length) return null;
+  return weights[allDates[allDates.length - 1]];
+}
+
+function renderNextGoalSection() {
+  const el = document.getElementById('next-goal-section');
+  const today = todayKey();
+  // Find next upcoming milestone
+  const next = MILESTONE_DATES.find(d => d > today);
+  if (!next) { el.innerHTML = ''; return; }
+  const idx = MILESTONE_DATES.indexOf(next);
+  const target = getMilestoneTarget(idx);
+  const lastW = getLastWeight();
+  const nextDate = new Date(next + 'T12:00:00').toLocaleDateString('de-AT', {day:'numeric', month:'long', year:'numeric'});
+
+  if (lastW === null) {
+    el.innerHTML = `<div class="next-goal-card">
+      <div class="next-goal-label">Nächster Meilenstein</div>
+      <div class="next-goal-date">📅 ${nextDate}</div>
+      <div style="font-size:13px;color:#5b4e78;">Trage dein Gewicht ein um loszulegen.</div>
+    </div>`;
+    return;
+  }
+
+  const stillNeeded = +(lastW - target).toFixed(1);
+  const sign = stillNeeded > 0 ? '−' : '+';
+
+  el.innerHTML = `<div class="next-goal-card">
+    <div class="next-goal-label">Nächster Meilenstein</div>
+    <div class="next-goal-date">📅 ${nextDate}</div>
+    <div class="next-goal-row">
+      <div class="next-goal-box">
+        <div class="next-goal-box-label">Aktuell</div>
+        <div class="next-goal-box-val">${lastW.toLocaleString('de-AT')} kg</div>
+        <div class="next-goal-box-sub">letzter Eintrag</div>
+      </div>
+      <div class="next-goal-box">
+        <div class="next-goal-box-label">Ziel am 15.</div>
+        <div class="next-goal-box-val target">${target.toLocaleString('de-AT')} kg</div>
+        <div class="next-goal-box-sub">−1,5 kg/Monat</div>
+      </div>
+      <div class="next-goal-box">
+        <div class="next-goal-box-label">Noch</div>
+        <div class="next-goal-box-val still">${sign}${Math.abs(stillNeeded).toLocaleString('de-AT')} kg</div>
+        <div class="next-goal-box-sub">abzunehmen</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderMilestones() {
+  renderNextGoalSection();
+  const list = document.getElementById('milestone-list');
+  const today = todayKey();
+  let html = '';
+
+  MILESTONE_DATES.forEach((ms, idx) => {
+    const msDate = new Date(ms + 'T12:00:00');
+    const label = msDate.toLocaleDateString('de-AT', {day:'numeric', month:'long', year:'numeric'});
+    const target = getMilestoneTarget(idx);
+    const actual = getWeightOnOrBefore(ms);
+    const isPast = ms < today;
+    const isToday = ms === today;
+    const isFuture = ms > today;
+
+    let status, icon;
+    if (isFuture) {
+      status = 'future'; icon = '·';
+    } else if (actual === null) {
+      status = 'pending'; icon = '?';
+    } else if (idx === 0) {
+      status = 'pending'; icon = '⚖';
+    } else {
+      status = actual <= target ? 'achieved' : 'missed';
+      icon = actual <= target ? '✓' : '✗';
+    }
+
+    const actualDisplay = actual !== null
+      ? `${actual.toLocaleString('de-AT')} kg`
+      : (isFuture ? '–' : 'Kein Eintrag');
+
+    const diffBadge = (() => {
+      if (status === 'future') return `<div class="ms-diff-badge future">geplant</div>`;
+      if (status === 'pending' && idx === 0) return `<div class="ms-diff-badge pending">Start</div>`;
+      if (status === 'pending') return `<div class="ms-diff-badge pending">Eintragen!</div>`;
+      const diff = +(actual - target).toFixed(1);
+      const txt = diff <= 0 ? `${diff} kg ✓` : `+${diff} kg`;
+      return `<div class="ms-diff-badge ${status}">${txt}</div>`;
+    })();
+
+    html += `<div class="milestone-row">
+      <div class="ms-side ${status}">
+        <div class="ms-side-icon">${icon}</div>
+        <div class="ms-side-num">15.</div>
+      </div>
+      <div class="ms-body ${status}">
+        <div class="ms-date-label${status==='future'?' future':''}">${label}</div>
+        <div class="ms-vals-row">
+          <div class="ms-val-block">
+            <div class="ms-val-title">Eingetragen</div>
+            <div class="ms-val-num actual ${status}">${actualDisplay}</div>
+          </div>
+          <div class="ms-divider"></div>
+          <div class="ms-val-block">
+            <div class="ms-val-title">Zielgewicht</div>
+            <div class="ms-val-num goal">${target.toLocaleString('de-AT')} kg</div>
+          </div>
+          ${diffBadge}
+        </div>
+      </div>
+    </div>`;
+  });
+
+  list.innerHTML = html || `<div class="empty-state">
+    <div class="empty-emoji">⚖️</div>
+    <div class="empty-text">Trage dein Startgewicht ein, um zu beginnen</div>
+    <button class="empty-btn" onclick="openWeightModal()">Jetzt eintragen →</button>
+  </div>`;
+}
+
+// ── Day edit modal ────────────────────────────────────────────────────────────
+const TASK_LABELS = {
+  su:  '🏋️ Sit-ups (3×20)',
+  bp:  '💪 Brustdrücken (3×20)',
+  viz: '🧘 Visualisierung',
+};
+const TASK_COLORS = { su: 'purple', bp: 'purple', viz: 'green' };
+const WEEKLY_LABELS = {
+  k1:'💪 Krafttraining #1', k2:'💪 Krafttraining #2', k3:'💪 Krafttraining #3',
+  c1:'🏃 Ausdauer #1', c2:'🏃 Ausdauer #2'
+};
+const WEEKLY_COLORS = { k1:'blue', k2:'blue', k3:'blue', c1:'green', c2:'green' };
+
+let editDateKey   = null;
+let editWeekKey   = null;
+
+function openDayModal(weekdayI, dateKey, weekMonday) {
+  editDateKey = dateKey;
+  editWeekKey = weekMonday || weekKeyFor(dateKey);
+
+  const names = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
+  const dateObj = new Date(dateKey + 'T12:00:00');
+  const dateStr = dateObj.toLocaleDateString('de-AT', {day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('dayModalTitle').textContent =
+    dateKey === todayKey() ? `Heute, ${dateStr}` : `${names[weekdayI]}, ${dateStr}`;
+
+  renderDayModalContent();
+  document.getElementById('dayModal').classList.add('open');
+}
+
+function renderDayModalContent() {
+  const dayData = loadLS('daily-' + editDateKey);
+  const wkData  = loadLS('weekly-' + editWeekKey);
+  const doneCount = DAILY_TASKS.filter(id => dayData[id]).length;
+  const isComplete = doneCount === DAILY_TASKS.length;
+
+  let badgeHTML;
+  if (isComplete) badgeHTML = '<div class="day-modal-badge full">🎉 Tagesziel erreicht!</div>';
+  else if (doneCount > 0) badgeHTML = `<div class="day-modal-badge partial">⚡ ${doneCount} von ${DAILY_TASKS.length} erledigt</div>`;
+  else badgeHTML = '<div class="day-modal-badge none">Nichts eingetragen</div>';
+  document.getElementById('dayModalBadge').innerHTML = badgeHTML;
+
+  let html = `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:8px">Täglich</div>`;
+  DAILY_TASKS.forEach(id => {
+    const done   = !!dayData[id];
+    const accent = TASK_COLORS[id];
+    html += `<div class="day-edit-row ${done ? 'done-'+accent : ''}" onclick="toggleDayTask('${id}')">
+      <div class="day-edit-check ${done ? 'done-'+accent : ''}">${done ? '✓' : ''}</div>
+      <div class="day-edit-label ${done ? 'done' : ''}">${TASK_LABELS[id]}</div>
+    </div>`;
+  });
+
+  // Always show weekly tasks (user can edit them for the week of the selected day)
+  html += `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin:14px 0 8px">Wöchentlich (${new Date(editWeekKey+'T12:00:00').toLocaleDateString('de-AT',{day:'numeric',month:'short'})}-Woche)</div>`;
+  WEEKLY_TASKS.forEach(id => {
+    const done   = !!wkData[id];
+    const accent = WEEKLY_COLORS[id];
+    html += `<div class="day-edit-row ${done ? 'done-'+accent : ''}" onclick="toggleDayWeeklyTask('${id}')">
+      <div class="day-edit-check ${done ? 'done-'+accent : ''}">${done ? '✓' : ''}</div>
+      <div class="day-edit-label ${done ? 'done' : ''}">${WEEKLY_LABELS[id]}</div>
+    </div>`;
+  });
+
+  document.getElementById('dayModalTasks').innerHTML = html;
+}
+
+function toggleDayTask(id) {
+  const key  = 'daily-' + editDateKey;
+  const data = loadLS(key);
+  data[id] = !data[id];
+  saveLS(key, data);
+  // sync live state if editing today
+  if (editDateKey === todayKey()) {
+    daily[id] = data[id];
+    renderDaily();
+  }
+  buildWeekstrip();
+  renderTrainCalendar();
+  renderDayModalContent();
+}
+
+function toggleDayWeeklyTask(id) {
+  const key  = 'weekly-' + editWeekKey;
+  const data = loadLS(key);
+  data[id] = !data[id];
+  saveLS(key, data);
+  // sync live weekly state if editing current week
+  if (editWeekKey === weekKey()) {
+    weekly[id] = data[id];
+    renderWeekly();
+  }
+  renderDayModalContent();
+}
+
+function closeDayModal() {
+  document.getElementById('dayModal').classList.remove('open');
+  editDateKey = null;
+  editWeekKey = null;
+}
+document.getElementById('dayModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeDayModal();
+});
+
+
+function openWeightModal() {
+  const today = todayKey();
+  document.getElementById('modalMonthLabel').textContent =
+    new Date(today + 'T12:00:00').toLocaleDateString('de-AT',{day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('weightInput').value = weights[today] || '';
+  document.getElementById('weightModal').classList.add('open');
+  setTimeout(()=>document.getElementById('weightInput').focus(),100);
+}
+function closeWeightModal() {
+  document.getElementById('weightModal').classList.remove('open');
+}
+function saveWeight() {
+  const raw = document.getElementById('weightInput').value.replace(',','.');
+  const val = parseFloat(raw);
+  if (isNaN(val)) return;
+  weights[todayKey()] = val;
+  saveLS('weights', weights);
+  closeWeightModal();
+  renderMilestones();
+}
+document.getElementById('weightInput').addEventListener('keydown', e => { if(e.key==='Enter') saveWeight(); });
+document.getElementById('weightModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeWeightModal(); });
+
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+function showTab(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'ernaehrung') renderErnaehrung();
+  if (name === 'training') { renderDaily(); renderWeekly(); buildWeekstrip(); renderTrainCalendar(); renderCoach(); }
+}
+
+// ── Ernährung ─────────────────────────────────────────────────────────────────
+let ernaehrung = loadLS('ernaehrung', {}); // { "YYYY-MM-DD": "gruen"|"orange"|"rot" }
+let calViewYear  = new Date().getFullYear();
+let calViewMonth = new Date().getMonth(); // 0-indexed
+
+function rateToday(color) {
+  const key = todayKey();
+  if (ernaehrung[key] === color) {
+    // toggle off
+    delete ernaehrung[key];
+  } else {
+    ernaehrung[key] = color;
+  }
+  saveLS('ernaehrung', ernaehrung);
+  renderErnaehrung();
+}
+
+function calPrevMonth() {
+  calViewMonth--;
+  if (calViewMonth < 0) { calViewMonth = 11; calViewYear--; }
+  renderCalendar();
+  renderCalStats();
+}
+function calNextMonth() {
+  calViewMonth++;
+  if (calViewMonth > 11) { calViewMonth = 0; calViewYear++; }
+  renderCalendar();
+  renderCalStats();
+}
+
+function renderErnaehrung() {
+  const today = todayKey();
+  const todayDate = new Date(today + 'T12:00:00');
+  document.getElementById('ernaehr-today-date').textContent =
+    todayDate.toLocaleDateString('de-AT', {weekday:'long', day:'numeric', month:'long'});
+
+  // Highlight selected button
+  const cur = ernaehrung[today];
+  ['gruen','orange','rot'].forEach(c => {
+    const btn = document.getElementById('erb-' + c);
+    btn.className = 'ernaehr-rate-btn' + (cur === c ? ' selected-' + c : '');
+  });
+
+  renderCalendar();
+  renderCalStats();
+}
+
+function renderCalendar() {
+  const grid = document.getElementById('cal-grid');
+  const today = todayKey();
+  const todayDate = new Date();
+  const yr = calViewYear, mo = calViewMonth;
+
+  // Month label
+  document.getElementById('cal-month-label').textContent =
+    new Date(yr, mo, 1).toLocaleDateString('de-AT', {month:'long', year:'numeric'});
+
+  const firstDay = new Date(yr, mo, 1).getDay(); // 0=Sun
+  const startOffset = firstDay === 0 ? 6 : firstDay - 1; // Mo=0
+  const daysInMonth = new Date(yr, mo + 1, 0).getDate();
+
+  let html = '';
+  // Day headers
+  ['Mo','Di','Mi','Do','Fr','Sa','So'].forEach(d => {
+    html += `<div class="cal-day-header">${d}</div>`;
+  });
+
+  // Empty cells before first
+  for (let i = 0; i < startOffset; i++) {
+    html += `<div class="cal-day empty"></div>`;
+  }
+
+  // Days
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateKey = `${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = dateKey === today;
+    const isFuture = dateKey > today;
+    const color = ernaehrung[dateKey];
+
+    let cls = 'cal-day';
+    if (isToday) cls += ' today-marker';
+    if (isFuture) cls += ' future-day';
+    else if (!color) cls += ' past-day';
+    if (color) cls += ' ' + color;
+
+    const dot = color ? `<div class="cal-day-dot"></div>` : '';
+    const click = !isFuture ? `onclick="calDayClick('${dateKey}')"` : '';
+
+    html += `<div class="${cls}" ${click}>
+      <div class="cal-day-num">${d}</div>
+      ${dot}
+    </div>`;
+  }
+
+  grid.innerHTML = html;
+}
+
+function calDayClick(dateKey) {
+  const today = todayKey();
+  if (dateKey > today) return;
+  // Cycle through colors: none → gruen → orange → rot → none
+  const cur = ernaehrung[dateKey];
+  const cycle = [undefined, 'gruen', 'orange', 'rot'];
+  const nextIdx = (cycle.indexOf(cur) + 1) % cycle.length;
+  if (cycle[nextIdx] === undefined) {
+    delete ernaehrung[dateKey];
+  } else {
+    ernaehrung[dateKey] = cycle[nextIdx];
+  }
+  saveLS('ernaehrung', ernaehrung);
+  renderErnaehrung();
+}
+
+function renderCalStats() {
+  const el = document.getElementById('cal-stats');
+  const yr = calViewYear, mo = calViewMonth;
+  const daysInMonth = new Date(yr, mo + 1, 0).getDate();
+  const today = todayKey();
+
+  let gruen = 0, orange = 0, rot = 0, total = 0;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dk = `${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    if (dk > today) continue;
+    total++;
+    const c = ernaehrung[dk];
+    if (c === 'gruen') gruen++;
+    else if (c === 'orange') orange++;
+    else if (c === 'rot') rot++;
+  }
+
+  if (total === 0) { el.innerHTML = ''; return; }
+
+  const pctG = Math.round(gruen/total*100);
+  const pctO = Math.round(orange/total*100);
+  const pctR = Math.round(rot/total*100);
+
+  const monthName = new Date(yr, mo, 1).toLocaleDateString('de-AT', {month:'long'});
+
+  el.innerHTML = `<div class="cal-stats-title">📊 ${monthName} im Überblick</div>
+  <div class="cal-stats-bars">
+    <div class="cal-stat-row">
+      <div class="cal-stat-name">🟢 Grün</div>
+      <div class="cal-stat-bar-wrap"><div class="cal-stat-bar gruen" style="width:${pctG}%"></div></div>
+      <div class="cal-stat-count gruen">${gruen}</div>
+    </div>
+    <div class="cal-stat-row">
+      <div class="cal-stat-name">🟠 Orange</div>
+      <div class="cal-stat-bar-wrap"><div class="cal-stat-bar orange" style="width:${pctO}%"></div></div>
+      <div class="cal-stat-count orange">${orange}</div>
+    </div>
+    <div class="cal-stat-row">
+      <div class="cal-stat-name">🔴 Rot</div>
+      <div class="cal-stat-bar-wrap"><div class="cal-stat-bar rot" style="width:${pctR}%"></div></div>
+      <div class="cal-stat-count rot">${rot}</div>
+    </div>
+  </div>`;
+}
+
+// ── Coach ─────────────────────────────────────────────────────────────────────
+const COACH_TIPS = [
+  // Motivation & Mindset
+  "Jeder große Fortschritt beginnt mit einem kleinen Schritt. Du hast dich heute entschieden, aktiv zu sein — das ist bereits der wichtigste Schritt.",
+  "Stell dir vor, wie du dich in 3 Monaten fühlst, wenn du heute wieder durchhältst. Dieses Bild ist dein stärkster Antrieb.",
+  "Motivation bringt dich in Gang, Gewohnheit hält dich in Bewegung. Mach deine Übungen so selbstverständlich wie Zähneputzen.",
+  "Perfekt gibt es nicht. Aber konsequent — das gibt es. Ein mittelmäßiges Training heute schlägt kein Training bei weitem.",
+  "Vergleiche dich nur mit der Person, die du gestern warst. Du bist schon weiter als du denkst.",
+  "Dein Körper schafft fast immer mehr als dein Kopf glaubt. Wenn du an deine Grenzen stößt — atme durch und mach noch eine Wiederholung.",
+  "Die härteste Wiederholung ist die erste. Danach läuft alles von alleine.",
+  "Erfolg ist die Summe kleiner Anstrengungen, die Tag für Tag wiederholt werden. Du sammelst diese Summe gerade.",
+  "Ein schlechter Tag ist kein Grund aufzuhören — sondern ein Grund, morgen wieder anzufangen.",
+  "Dein zukünftiges Ich wird dir für jeden heutigen Schritt dankbar sein.",
+
+  // Abnehmen & Ernährung
+  "−1,5 kg pro Monat klingt wenig. Aber in 6 Monaten sind das 9 kg — eine echte, nachhaltige Veränderung ohne Jo-Jo-Effekt.",
+  "Wer langsam abnimmt, behält das Ergebnis. Crash-Diäten bauen Muskel ab — dein Plan baut Muskel auf.",
+  "Ernährung macht ca. 70 % des Abnehmens aus. Ein grüner Tag bei der Ernährung wirkt mehr als eine extra Sportstunde.",
+  "Hunger ist nicht immer Hunger — oft ist es Durst. Trink ein großes Glas Wasser und warte 10 Minuten.",
+  "Iss langsam. Der Körper braucht 20 Minuten, um das Sättigungsgefühl zu registrieren. Wer schnell isst, isst mehr.",
+  "Proteinreiche Mahlzeiten halten länger satt und schützen deine Muskeln beim Abnehmen. Eier, Hühnchen, Hülsenfrüchte — deine besten Freunde.",
+  "Ein orangener oder roter Ernährungstag ist keine Niederlage. Er zeigt dir, wo du Spielraum hast — und morgen machst du es besser.",
+  "Kalorien in flüssiger Form werden oft unterschätzt. Säfte, Kaffeegetränke und Alkohol können schnell 300–500 kcal extra bedeuten.",
+  "Vorkochen am Wochenende ist eine der wirkungsvollsten Strategien. Wenn gesundes Essen bereit steht, greifst du seltener zu schlechten Optionen.",
+  "Iss nicht aus Langeweile — iss wenn du wirklich hungrig bist. Stell dir die Frage: Würde ich jetzt einen Apfel essen? Wenn nein, bist du nicht wirklich hungrig.",
+
+  // Krafttraining
+  "Krafttraining verbrennt nicht nur während des Trainings Kalorien — dein Stoffwechsel bleibt danach bis zu 48 Stunden erhöht.",
+  "Mit jedem Krafttraining baust du Muskelmasse auf. Muskeln verbrennen im Ruhezustand mehr Kalorien als Fett — dein Körper wird zur Fettverbrennungsmaschine.",
+  "Sit-ups und Brustdrücken klingen einfach — aber 3 Sätze à 20 konsequent jeden Tag formt deinen Körper mehr als du denkst.",
+  "Progressive Überladung ist das Geheimnis: Werde jede Woche ein kleines bisschen stärker. Heute schaffst du 20 Wiederholungen — in 2 Monaten machst du sie mit Leichtigkeit.",
+  "Kurze Pausen zwischen den Sätzen (30–60 Sekunden) erhöhen den Trainingseffekt. Gönne dir Ruhe — aber nicht zu lange.",
+  "Achte bei Sit-ups auf die Körperspannung: Bauch anspannen, nicht am Nacken ziehen. Qualität schlägt Quantität.",
+  "Beim Brustdrücken: Schulterblätter zusammenziehen, Brust nach vorne — das schützt die Schultern und macht die Übung effektiver.",
+  "3 Einheiten Krafttraining pro Woche reichen aus, um messbare Ergebnisse zu erzielen — wenn du konsequent dabei bleibst.",
+  "Muskelkater am nächsten Tag? Das ist ein gutes Zeichen. Deine Muskeln passen sich an und werden stärker.",
+  "Dein Körper braucht Ruhe genauso wie Training. Erholungstage sind kein Versagen — sie sind Teil des Plans.",
+
+  // Ausdauer & Bewegung
+  "Schon 30 Minuten zügiges Gehen verbrennt ca. 150–200 kcal und hebt die Stimmung durch Endorphine.",
+  "Wandern ist unterschätztes Training. Unebenes Gelände aktiviert Muskeln, die beim Joggen kaum beansprucht werden.",
+  "Beim Radeln: Wähle hin und wieder eine härtere Route. Die Abwechslung hält die Motivation hoch und den Körper auf Trab.",
+  "Laufen ist Meditation in Bewegung. Lass die Gedanken fließen — viele große Ideen entstehen beim Laufen.",
+  "Ausdauertraining stärkt das Herz, verbessert den Schlaf und reduziert Stress. Es ist kein Zusatz — es ist Grundlage.",
+  "Fang langsam an, bleib lange dabei. Wer zu schnell startet, gibt zu früh auf. Tempo und Intensität kommen von alleine.",
+  "Musik oder Podcasts beim Training machen die Zeit kürzer und die Einheit angenehmer. Leg eine Trainings-Playlist an.",
+  "Bewegung in den Alltag integrieren: Treppen statt Lift, zu Fuß zum Einkaufen, kurze Spaziergänge in der Mittagspause — alles zählt.",
+  "2 Ausdauereinheiten pro Woche verbessern nachweislich die Fettverbrennung und die Herz-Kreislauf-Gesundheit.",
+  "Frische Luft beim Training ist ein Bonus. Tageslicht reguliert den Schlaf-Wach-Rhythmus und hebt die Stimmung.",
+
+  // Schlaf & Erholung
+  "Schlaf ist die mächtigste Erholungsmaßnahme. Wer weniger als 7 Stunden schläft, baut langsamer Muskeln auf und nimmt schwerer ab.",
+  "Im Schlaf schüttet der Körper Wachstumshormone aus — deine Muskeln wachsen nicht im Training, sondern in der Nacht danach.",
+  "Stress erhöht Cortisol, Cortisol fördert Fetteinlagerung besonders am Bauch. Erholung und Entspannung sind aktiver Teil deines Abnehmplans.",
+  "Ein kurzer Mittagsschlaf (10–20 Minuten) kann Konzentration und Trainingslust am Nachmittag deutlich steigern.",
+  "Leg das Handy 30 Minuten vor dem Schlafen weg. Besserer Schlaf = bessere Erholung = bessere Trainingsresultate.",
+
+  // Gewicht & Fortschritt
+  "Das Gewicht schwankt täglich um 1–2 kg durch Wasser, Verdauung und Hormone. Lass dich davon nicht irritieren — der Trend zählt.",
+  "Messe deinen Fortschritt auch an Energie, Stimmung und Kraft — nicht nur an der Zahl auf der Waage.",
+  "Bauchfett ist oft das hartnäckigste — aber es ist auch das erste, das sich bei konsequentem Training und Ernährung verändert.",
+  "Muskel wiegt mehr als Fett. Wenn du trainierst und die Waage stagniert, kann es sein, dass du trotzdem Fett verlierst und Muskeln aufbaust.",
+  "Dein Ziel bis Dezember: 70,8 kg. Das sind rund 0,35 kg pro Woche — sehr machbar, wenn du dran bleibst.",
+
+  // Visualisierung & Mindset
+  "Deine tägliche Visualisierung ist mächtiger als du denkst. Das Gehirn unterscheidet kaum zwischen lebhafter Vorstellung und Realität.",
+  "Stell dir beim Visualisieren nicht nur das Zielgewicht vor — stell dir vor, wie du dich bewegst, was du anziehst, wie andere dich wahrnehmen.",
+  "Athleten visualisieren ihren Erfolg bevor sie ihn erleben. Du tust heute dasselbe.",
+  "5 Minuten täglich mentales Training können über Wochen messbare physische Auswirkungen haben. Deine Routine ist wissenschaftlich fundiert.",
+  "Positives Denken alleine reicht nicht — aber positives Denken kombiniert mit täglichem Handeln ist unschlagbar.",
+
+  // Wochenplanung
+  "Mo · Mi · Fr für Krafttraining, Di · Do oder Sa für Ausdauer — diese Verteilung gibt deinem Körper ideale Erholungszeiten.",
+  "Plane dein Training wie einen Termin. Was im Kalender steht, wird gemacht.",
+  "Sonntag ist der beste Tag um die Woche zu reflektieren: Was lief gut? Was kann ich verbessern? 5 Minuten Reflexion machen den Unterschied.",
+  "Eine gute Woche braucht nicht perfekt zu sein. Sie braucht nur mehr gute Entscheidungen als schlechte.",
+  "Wenn du eine Einheit verpasst: Mach sie nicht nach — bleib einfach beim nächsten geplanten Termin. Kein Schuldgefühl nötig.",
+
+  // Hydration & Basics
+  "Trink täglich mindestens 2 Liter Wasser. Schon leichte Dehydration reduziert die Trainingsleistung um bis zu 10 %.",
+  "Morgens als erstes ein großes Glas Wasser trinken startet den Stoffwechsel und gibt dir direkt Energie.",
+  "Kaffee vor dem Training kann die Leistung steigern. Aber: Kein Kaffee auf leeren Magen und Maßhalten.",
+  "Nach dem Training: Proteine essen. Das Zeitfenster in den ersten 30–60 Minuten ist ideal für Muskelregeneration.",
+  "Warmes Aufwärmen vor dem Training verhindert Verletzungen und verbessert die Übungsausführung. 2–3 Minuten reichen.",
+
+  // Langzeitperspektive
+  "Du baust gerade einen Lebensstil auf — keine Diät, kein Programm mit Ablaufdatum. Das ist der Unterschied zwischen Erfolg und Jo-Jo.",
+  "In 6 Monaten wirst du froh sein, heute angefangen zu haben. In 2 Jahren wirst du kaum glauben, wie weit du gekommen bist.",
+  "Kleine tägliche Verbesserungen summieren sich zu massiven Ergebnissen. 1 % besser jeden Tag macht dich in einem Jahr 37× besser.",
+  "Das Wichtigste ist nicht das Gewicht auf der Waage — sondern das Gefühl in deinem Körper. Energie, Stärke, Wohlbefinden.",
+  "Du machst das nicht für andere. Du machst das für das beste, gesündeste, stärkste Ich, das du sein kannst.",
+  "Rückschläge gehören dazu. Die Frage ist nicht ob du fällst — sondern wie schnell du wieder aufstehst.",
+  "Wer seinen Körper respektiert, ernährt ihn gut, bewegt ihn regelmäßig und gibt ihm ausreichend Ruhe. Das ist kein Opfer — das ist Selbstliebe.",
+  "Dein Körper ist der einzige Ort, in dem du definitiv für immer wohnen wirst. Investiere in ihn.",
+  "Konsistenz über Intensität. Lieber 3× pro Woche moderate Einheiten als einmal brutal und dann wochenlang nichts.",
+  "Feiere jeden Meilenstein. −1,5 kg bedeutet: Du hast es geschafft. Das verdient Anerkennung — auch wenn es sich klein anfühlt.",
+];
+
+function renderCoach() {
+  const today = new Date();
+  const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
+  const tipIndex = dayOfYear % COACH_TIPS.length;
+  const tip = COACH_TIPS[tipIndex];
+
+  const dayNames = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+  const dayName = dayNames[today.getDay()];
+  const dateStr = today.toLocaleDateString('de-AT', {day:'numeric', month:'long'});
+
+  const dayEl = document.getElementById('coach-day');
+  const tipEl = document.getElementById('coach-tip');
+  if (dayEl) dayEl.textContent = `Tipp für ${dayName}, ${dateStr}`;
+  if (tipEl) tipEl.textContent = tip;
+}
+
+let isLight = loadLS('theme', false) === true || loadLS('theme', false) === 'true';
+
+function applyTheme() {
+  if (isLight) {
+    document.body.classList.add('light');
+    document.getElementById('themeToggle').textContent = '🌙';
+  } else {
+    document.body.classList.remove('light');
+    document.getElementById('themeToggle').textContent = '☀️';
+  }
+}
+
+function toggleTheme() {
+  isLight = !isLight;
+  saveLS('theme', isLight);
+  applyTheme();
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+function init() {
+  // Delete yesterday's weight entry if present, keep today's as 81.3 kg
+  const yesterday = (() => {
+    const d = new Date(); d.setDate(d.getDate()-1);
+    return d.toISOString().slice(0,10);
+  })();
+  if (weights[yesterday] !== undefined) {
+    delete weights[yesterday];
+    saveLS('weights', weights);
+  }
+  // Set today's weight to 81.3 if not already set
+  const today = todayKey();
+  if (!weights[today]) {
+    weights[today] = 81.3;
+    saveLS('weights', weights);
+  }
+
+  document.getElementById('todayDate').textContent =
+    new Date().toLocaleDateString('de-AT', {weekday:'long', day:'numeric', month:'long'});
+  applyTheme();
+  buildWeekstrip();
+  renderDaily();
+  renderWeekly();
+  renderMilestones();
+  renderErnaehrung();
+  renderTrainCalendar();
+  renderCoach();
+}
+init();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
