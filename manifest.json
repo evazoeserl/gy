@@ -1,8 +1,9 @@
 {
   "name": "GreatYou",
   "short_name": "GreatYou",
-  "description": "GreatYou – Dein persönlicher Fitness- und Ernährungstracker",
-  "start_url": "/index.html",
+  "description": "GreatYou – Dein persönlicher Wohlfühltracker",
+  "start_url": "/gy/index.html",
+  "scope": "/gy",
   "display": "standalone",
   "background_color": "#0d0b18",
   "theme_color": "#0d0b18",

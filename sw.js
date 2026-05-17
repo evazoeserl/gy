@@ -1,7 +1,8 @@
 const CACHE = 'greatyou-v1';
 const ASSETS = [
-  '/index.html',
-  '/manifest.json',
+  '/gy/',
+  '/gy/index.html',
+  '/gy/manifest.json',
   'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=Cormorant+Garamond:wght@700&display=swap'
 ];
 
@@ -30,7 +31,7 @@ self.addEventListener('fetch', e => {
         const clone = response.clone();
         caches.open(CACHE).then(cache => cache.put(e.request, clone));
         return response;
-      }).catch(() => caches.match('/index.html'));
+      }).catch(() => caches.match('/gy/index.html'));
     })
   );
 });
