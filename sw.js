@@ -23,13 +23,17 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  const req = e.request;
+  if (!req.url.startsWith('http://') && !req.url.startsWith('https://')) {
+    return; // ignore non-http(s) requests like chrome-extension://
+  }
   e.respondWith(
-    caches.match(e.request).then(cached => {
+    caches.match(req).then(cached => {
       if (cached) return cached;
-      return fetch(e.request).then(response => {
+      return fetch(req).then(response => {
         if (!response || response.status !== 200 || response.type === 'opaque') return response;
         const clone = response.clone();
-        caches.open(CACHE).then(cache => cache.put(e.request, clone));
+        caches.open(CACHE).then(cache => cache.put(req, clone)).catch(() => {});
         return response;
       }).catch(() => caches.match('/gy/index.html'));
     })

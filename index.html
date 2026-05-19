@@ -954,11 +954,141 @@ function weekKeyFor(dateStr) {
 function weekKey() { return weekKeyFor(todayKey()); }
 function monthKey() { return new Date().toISOString().slice(0,7); }
 function weekdayIdx() { const d = new Date().getDay(); return d === 0 ? 6 : d - 1; }
-function loadLS(key, fallback) {
+const STORAGE_DB_NAME = 'greatyou-store';
+const STORAGE_STORE_NAME = 'kv';
+let storageDBPromise = null;
+function openStorageDB() {
+  if (storageDBPromise) return storageDBPromise;
+  storageDBPromise = new Promise(resolve => {
+    if (!('indexedDB' in window)) return resolve(null);
+    const req = indexedDB.open(STORAGE_DB_NAME, 1);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(STORAGE_STORE_NAME)) {
+        db.createObjectStore(STORAGE_STORE_NAME);
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => resolve(null);
+  });
+  return storageDBPromise;
+}
+function loadLocalStorage(key, fallback) {
   if (fallback === undefined) fallback = {};
   try { const v = localStorage.getItem(key); if (v === null) return fallback; const p = JSON.parse(v); return (p !== null && typeof p === 'object') ? p : fallback; } catch { return fallback; }
 }
-function saveLS(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} }
+function loadLocalStorageRaw(key, fallback) {
+  if (fallback === undefined) fallback = '';
+  try { const v = localStorage.getItem(key); return v === null ? fallback : v; } catch { return fallback; }
+}
+async function idbGet(key) {
+  const db = await openStorageDB();
+  if (!db) return undefined;
+  return new Promise(resolve => {
+    const tx = db.transaction(STORAGE_STORE_NAME, 'readonly');
+    const store = tx.objectStore(STORAGE_STORE_NAME);
+    const req = store.get(key);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => resolve(undefined);
+  });
+}
+async function idbGetAll() {
+  const db = await openStorageDB();
+  if (!db) return {};
+  return new Promise(resolve => {
+    const tx = db.transaction(STORAGE_STORE_NAME, 'readonly');
+    const store = tx.objectStore(STORAGE_STORE_NAME);
+    const data = {};
+    store.openCursor().onsuccess = e => {
+      const cursor = e.target.result;
+      if (cursor) {
+        data[cursor.key] = cursor.value;
+        cursor.continue();
+      } else {
+        resolve(data);
+      }
+    };
+    tx.oncomplete = () => {};
+  });
+}
+async function idbSet(key, value) {
+  const db = await openStorageDB();
+  if (!db) return;
+  return new Promise(resolve => {
+    const tx = db.transaction(STORAGE_STORE_NAME, 'readwrite');
+    tx.objectStore(STORAGE_STORE_NAME).put(value, key);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => resolve();
+  });
+}
+async function storageHas(key) {
+  const db = await openStorageDB();
+  if (db) {
+    const stored = await idbGet(key);
+    if (stored !== undefined) return true;
+  }
+  try { return localStorage.getItem(key) !== null; } catch { return false; }
+}
+async function storageGetJson(key, fallback = {}) {
+  const db = await openStorageDB();
+  if (db) {
+    const stored = await idbGet(key);
+    if (stored !== undefined) return stored;
+  }
+  return loadLocalStorage(key, fallback);
+}
+async function storageGetRaw(key, fallback = '') {
+  const db = await openStorageDB();
+  if (db) {
+    const stored = await idbGet(key);
+    if (stored !== undefined) return String(stored);
+  }
+  return loadLocalStorageRaw(key, fallback);
+}
+async function storageSetJson(key, value) {
+  const db = await openStorageDB();
+  if (db) await idbSet(key, value);
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch {}
+}
+async function storageSetRaw(key, value) {
+  const db = await openStorageDB();
+  if (db) await idbSet(key, String(value));
+  try { localStorage.setItem(key, String(value)); } catch {}
+}
+async function syncStorageFromDB() {
+  const all = await idbGetAll();
+  Object.keys(all).forEach(key => {
+    if (localStorage.getItem(key) === null) {
+      try {
+        if (typeof all[key] === 'string') {
+          localStorage.setItem(key, all[key]);
+        } else {
+          localStorage.setItem(key, JSON.stringify(all[key]));
+        }
+      } catch {}
+    }
+  });
+}
+async function initStorage() {
+  await openStorageDB();
+  await syncStorageFromDB();
+  if (navigator.storage && navigator.storage.persist) {
+    try {
+      if (!(await navigator.storage.persisted())) {
+        await navigator.storage.persist();
+      }
+    } catch {}
+  }
+}
+async function loadLS(key, fallback) {
+  return storageGetJson(key, fallback);
+}
+async function saveLS(key, val) {
+  return storageSetJson(key, val);
+}
+async function saveRawItem(key, val) {
+  return storageSetRaw(key, val);
+}
 function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 function getDateKeyForWeekday(weekdayI, refMon) {
   const mon = refMon ? new Date(refMon + 'T12:00:00') : (() => { const d = new Date(); const day = d.getDay() === 0 ? 7 : d.getDay(); const m = new Date(d); m.setDate(d.getDate() - day + 1); return m; })();
@@ -966,31 +1096,31 @@ function getDateKeyForWeekday(weekdayI, refMon) {
   return target.toISOString().slice(0,10);
 }
 const WEEKDAYS = ['Mo','Di','Mi','Do','Fr','Sa','So'];
-let weights = loadLS('weights', {});
+let weights;
 
 // Commitment functions
-function initCommitment() {
-  const stored = localStorage.getItem('commitment') || '';
+async function initCommitment() {
+  const stored = await storageGetRaw('commitment', '');
   const el = document.getElementById('commitText');
   el.value = stored;
   document.getElementById('commitCount').textContent = stored.length;
-  const collapsed = localStorage.getItem('commitCollapsed') === 'true';
+  const collapsed = await storageGetRaw('commitCollapsed', 'false') === 'true';
   const body = document.getElementById('commitBody');
   const toggle = document.getElementById('commitToggle');
   if (collapsed) { body.classList.remove('open'); toggle.textContent = '▸'; }
   else { body.classList.add('open'); toggle.textContent = '▾'; }
 }
-function saveCommitment() {
+async function saveCommitment() {
   const el = document.getElementById('commitText');
-  localStorage.setItem('commitment', el.value);
+  await saveRawItem('commitment', el.value);
   document.getElementById('commitCount').textContent = el.value.length;
 }
-function toggleCommitment() {
+async function toggleCommitment() {
   const body = document.getElementById('commitBody');
   const toggle = document.getElementById('commitToggle');
   const isOpen = body.classList.contains('open');
-  if (isOpen) { body.classList.remove('open'); toggle.textContent = '▸'; localStorage.setItem('commitCollapsed','true'); }
-  else { body.classList.add('open'); toggle.textContent = '▾'; localStorage.setItem('commitCollapsed','false'); }
+  if (isOpen) { body.classList.remove('open'); toggle.textContent = '▸'; await saveRawItem('commitCollapsed','true'); }
+  else { body.classList.add('open'); toggle.textContent = '▾'; await saveRawItem('commitCollapsed','false'); }
 }
 function showSubTab(name) {
  document.querySelectorAll('.sub-tab-content').forEach(el => el.classList.remove('active'));
@@ -1016,10 +1146,9 @@ const CATEGORIES = {
 };
 const CAT_ORDER = ['kraft','ausdauer','mental','ernaehrung','sonstiges'];
 
-let goals = loadLS('goals', null);
-if (goals === null) { goals = []; saveLS('goals', goals); }
+let goals = [];
 
-function normalizeGoals() {
+async function normalizeGoals() {
   let ch = false;
   goals.forEach(g => {
     if (g.type === 'weekly') {
@@ -1029,30 +1158,29 @@ function normalizeGoals() {
       if (g.weeklyTarget === undefined) { g.weeklyTarget = null; ch = true; }
     }
   });
-  if (ch) saveLS('goals', goals);
+  if (ch) await saveLS('goals', goals);
 }
-normalizeGoals();
 
 function getActiveGoals(dateStr, type) {
   return goals.filter(g => g.type === type && g.effectiveFrom <= dateStr && (g.deletedAt === null || g.deletedAt > dateStr));
 }
-function normWD(wk) {
-  const obj = loadLS('weekly-' + wk);
+async function normWD(wk) {
+  const obj = await loadLS('weekly-' + wk, {});
   let ch = false;
   Object.keys(obj || {}).forEach(k => {
     const v = obj[k];
     if (v === true) { obj[k] = 1; ch = true; }
     else if (v === false || v === null) { obj[k] = 0; ch = true; }
   });
-  if (ch) saveLS('weekly-' + wk, obj);
+  if (ch) await saveLS('weekly-' + wk, obj);
   return obj;
 }
 
-let dailyData = loadLS('daily-' + todayKey());
-let weeklyData = normWD(weekKey());
+let dailyData;
+let weeklyData;
 
-function renderTrainingGoals() {
-  renderDailySection(); renderWeeklySection();
+async function renderTrainingGoals() {
+  renderDailySection(); await renderWeeklySection();
   const aD = getActiveGoals(todayKey(), 'daily');
   const aW = getActiveGoals(weekKey(), 'weekly');
   const dailyEmpty = document.getElementById('daily-empty-state');
@@ -1097,16 +1225,16 @@ function updDailyProg(done, total) {
   else { hint.textContent = 'Noch ' + (total - done) + ' übrig'; hint.style.color = '#8b7aaa'; }
 }
 
-function toggleDailyGoal(gid) {
+async function toggleDailyGoal(gid) {
   dailyData[gid] = !dailyData[gid];
-  saveLS('daily-' + todayKey(), dailyData);
-  renderTrainingGoals(); buildWeekstrip(); renderTrainCalendar();
+  await saveLS('daily-' + todayKey(), dailyData);
+  await renderTrainingGoals(); await buildWeekstrip(); await renderTrainCalendar();
 }
 
-function renderWeeklySection() {
+async function renderWeeklySection() {
   const wrap = document.getElementById('weekly-section-wrap');
   const wk = weekKey(); const active = getActiveGoals(wk, 'weekly');
-  weeklyData = normWD(wk);
+  weeklyData = await normWD(wk);
   if (active.length === 0) { wrap.innerHTML = ''; updWeeklyProg(0, 0); return; }
   const groups = {};
   active.forEach(g => (groups[g.category] = groups[g.category] || []).push(g));
@@ -1148,27 +1276,28 @@ function updWeeklyProg(done, total) {
   else { hint.textContent = 'Noch ' + (total - done); hint.style.color = '#8b7aaa'; }
 }
 
-function toggleWeeklyGoal(gid) {
-  const wk = weekKey(), data = normWD(wk);
+async function toggleWeeklyGoal(gid) {
+  const wk = weekKey(), data = await normWD(wk);
   const g = goals.find(x => x.id === gid) || { weeklyTarget: 1 };
   const target = g.weeklyTarget || 1;
   let cur = data[gid] || 0; if (typeof cur !== 'number') cur = 0;
   let next = cur + 1; if (next > target) next = 0;
-  data[gid] = next; saveLS('weekly-' + wk, data);
+  data[gid] = next; await saveLS('weekly-' + wk, data);
   weeklyData = data;
-  renderWeeklySection();
-  renderTrainCalendar();
+  await renderWeeklySection();
+  await renderTrainCalendar();
 }
 
-function buildWeekstrip() {
+async function buildWeekstrip() {
   const strip = document.getElementById('weekstrip'); strip.innerHTML = '';
   const todayI = weekdayIdx(), wkMon = weekKey();
-  WEEKDAYS.forEach((d, i) => {
+  for (let i = 0; i < WEEKDAYS.length; i++) {
+    const d = WEEKDAYS[i];
     const dk = getDateKeyForWeekday(i, wkMon);
     const isPast = i < todayI, isToday = i === todayI, isFuture = i > todayI;
-    const hasData = localStorage.getItem('daily-' + dk) !== null;
+    const hasData = await storageHas('daily-' + dk);
     const active = getActiveGoals(dk, 'daily');
-    const dayData = hasData ? loadLS('daily-' + dk) : {};
+    const dayData = hasData ? await loadLS('daily-' + dk, {}) : {};
     const doneCount = active.filter(g => dayData[g.id]).length;
     const totalG = active.length;
     const isComplete = hasData && totalG > 0 && doneCount === totalG;
@@ -1185,14 +1314,14 @@ function buildWeekstrip() {
     el.innerHTML = `<span>${d}</span>${ind}`;
     if (!isFuture) { el.style.cursor = 'pointer'; el.onclick = () => openDayModal(i, dk, wkMon); }
     strip.appendChild(el);
-  });
+  }
 }
 
-function getWeekCellHtml(wk, allFuture) {
+async function getWeekCellHtml(wk, allFuture) {
   if (allFuture) return '<div class="cal-week-cell w-none"></div>';
   const active = getActiveGoals(wk, 'weekly');
   if (active.length === 0) return '<div class="cal-week-cell w-empty">–</div>';
-  const wd = normWD(wk); let doneC = 0, partC = 0;
+  const wd = await normWD(wk); let doneC = 0, partC = 0;
   active.forEach(g => { const cur = typeof wd[g.id] === 'number' ? wd[g.id] : 0; if (cur >= (g.weeklyTarget || 1)) doneC++; else if (cur > 0) partC++; });
   if (doneC === active.length) return '<div class="cal-week-cell w-gruen">✓</div>';
   if (doneC > 0 || partC > 0) return `<div class="cal-week-cell w-orange">${doneC + partC}/${active.length}</div>`;
@@ -1201,13 +1330,13 @@ function getWeekCellHtml(wk, allFuture) {
 
 let trainCalYear = new Date().getFullYear();
 let trainCalMonth = new Date().getMonth();
-function trainCalPrev() { trainCalMonth--; if (trainCalMonth < 0) { trainCalMonth = 11; trainCalYear--; } renderTrainCalendar(); }
-function trainCalNext() {
+async function trainCalPrev() { trainCalMonth--; if (trainCalMonth < 0) { trainCalMonth = 11; trainCalYear--; } await renderTrainCalendar(); }
+async function trainCalNext() {
   const now = new Date();
   if (trainCalYear > now.getFullYear() || (trainCalYear === now.getFullYear() && trainCalMonth >= now.getMonth())) return;
-  trainCalMonth++; if (trainCalMonth > 11) { trainCalMonth = 0; trainCalYear++; } renderTrainCalendar();
+  trainCalMonth++; if (trainCalMonth > 11) { trainCalMonth = 0; trainCalYear++; } await renderTrainCalendar();
 }
-function renderTrainCalendar() {
+async function renderTrainCalendar() {
   const yr = trainCalYear, mo = trainCalMonth, today = todayKey();
   document.getElementById('train-cal-month-label').textContent = new Date(yr, mo, 1).toLocaleDateString('de-AT', { month: 'long', year: 'numeric' });
   const firstDay = new Date(yr, mo, 1).getDay();
@@ -1225,11 +1354,11 @@ function renderTrainCalendar() {
 
   let lastDkInRow = null, rowAllFuture = true;
 
-  function addWeekStat(wk, allFuture){
+  async function addWeekStat(wk, allFuture){
     if(allFuture) return;
     const activeW = getActiveGoals(wk,'weekly');
     if(!activeW || activeW.length===0) return;
-    const wd = normWD(wk);
+    const wd = await normWD(wk);
     let doneC = 0, partC = 0;
     activeW.forEach(g=>{
       const target = g.weeklyTarget || 1;
@@ -1247,9 +1376,9 @@ function renderTrainCalendar() {
   for (let d = 1; d <= dim; d++) {
     const dk = `${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const isFut = dk > today, isT = dk === today;
-    const hasData = localStorage.getItem('daily-' + dk) !== null;
+    const hasData = await storageHas('daily-' + dk);
     const active = getActiveGoals(dk, 'daily');
-    const dayD = hasData ? loadLS('daily-' + dk) : {};
+    const dayD = hasData ? await loadLS('daily-' + dk, {}) : {};
     const dc = active.filter(g => dayD[g.id]).length;
     const tg = active.length;
     const isComp = hasData && tg > 0 && dc === tg;
@@ -1274,8 +1403,8 @@ function renderTrainCalendar() {
 
     if (col === 7) {
       const wk = weekKeyFor(dk);
-      html += getWeekCellHtml(wk, rowAllFuture);
-      addWeekStat(wk, rowAllFuture);
+      html += await getWeekCellHtml(wk, rowAllFuture);
+      await addWeekStat(wk, rowAllFuture);
       col = 0;
       rowAllFuture = true;
     }
@@ -1285,8 +1414,8 @@ function renderTrainCalendar() {
     while (col < 7) { html += '<div class="cal-day empty"></div>'; col++; }
     const wk = lastDkInRow ? weekKeyFor(lastDkInRow) : null;
     if (wk) {
-      html += getWeekCellHtml(wk, rowAllFuture);
-      addWeekStat(wk, rowAllFuture);
+      html += await getWeekCellHtml(wk, rowAllFuture);
+      await addWeekStat(wk, rowAllFuture);
     } else {
       html += '<div class="cal-week-cell w-none"></div>';
     }
@@ -1331,18 +1460,18 @@ function renderTrainCalendar() {
 
 
 let editDateKey = null, editWeekKey = null;
-function openDayModal(wdI, dk, wkMon) {
+async function openDayModal(wdI, dk, wkMon) {
   editDateKey = dk; editWeekKey = wkMon || weekKeyFor(dk);
   const names = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
   const ds = new Date(dk + 'T12:00:00').toLocaleDateString('de-AT', { day: 'numeric', month: 'long', year: 'numeric' });
   document.getElementById('dayModalTitle').textContent = dk === todayKey() ? `Heute, ${ds}` : `${names[wdI]}, ${ds}`;
-  renderDMC(); document.getElementById('dayModal').classList.add('open');
+  await renderDMC(); document.getElementById('dayModal').classList.add('open');
 }
-function renderDMC() {
+async function renderDMC() {
   const aD = getActiveGoals(editDateKey, 'daily');
   const key = 'daily-' + editDateKey;
-  const hasD = localStorage.getItem(key) !== null;
-  const dD = hasD ? loadLS(key) : {};
+  const hasD = await storageHas(key);
+  const dD = hasD ? await loadLS(key, {}) : {};
   const dc = aD.filter(g => dD[g.id]).length;
   const isC = aD.length > 0 && dc === aD.length && hasD;
   let badge;
@@ -1371,21 +1500,21 @@ function renderDMC() {
   });
   document.getElementById('dayModalTasks').innerHTML = h;
 }
-function toggleDayTask(gid) {
-  const k = 'daily-' + editDateKey, d = loadLS(k);
-  d[gid] = !d[gid]; saveLS(k, d);
-  if (editDateKey === todayKey()) { dailyData = d; renderTrainingGoals(); }
-  buildWeekstrip(); renderTrainCalendar(); renderDMC();
+async function toggleDayTask(gid) {
+  const k = 'daily-' + editDateKey, d = await loadLS(k, {});
+  d[gid] = !d[gid]; await saveLS(k, d);
+  if (editDateKey === todayKey()) { dailyData = d; await renderTrainingGoals(); }
+  await buildWeekstrip(); await renderTrainCalendar(); await renderDMC();
 }
-function toggleDayWeeklyTask(gid) {
-  const k = 'weekly-' + editWeekKey, d = normWD(editWeekKey);
+async function toggleDayWeeklyTask(gid) {
+  const k = 'weekly-' + editWeekKey, d = await normWD(editWeekKey);
   const g = goals.find(x => x.id === gid) || { weeklyTarget: 1 };
   const target = g.weeklyTarget || 1;
   let cur = d[gid] || 0; let next = cur + 1; if (next > target) next = 0;
-  d[gid] = next; saveLS(k, d);
-  if (editWeekKey === weekKey()) { weeklyData = d; renderWeeklySection(); }
-  renderTrainCalendar();
-  renderDMC();
+  d[gid] = next; await saveLS(k, d);
+  if (editWeekKey === weekKey()) { weeklyData = d; await renderWeeklySection(); }
+  await renderTrainCalendar();
+  await renderDMC();
 }
 function closeDayModal() { document.getElementById('dayModal').classList.remove('open'); editDateKey = null; editWeekKey = null; }
 document.getElementById('dayModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeDayModal(); });
@@ -1429,7 +1558,7 @@ function selGoalType(t) {
   if (t === 'weekly') { wf.style.display = 'block'; if (!document.getElementById('gmWeeklyTarget').value) document.getElementById('gmWeeklyTarget').value = '1'; }
   else { wf.style.display = 'none'; document.getElementById('gmWeeklyTarget').value = ''; }
 }
-function saveGoal() {
+async function saveGoal() {
   const ti = document.getElementById('gmTitle').value.trim();
   const de = document.getElementById('gmDesc').value.trim();
   const ca = document.getElementById('gmCat').value;
@@ -1447,23 +1576,24 @@ function saveGoal() {
     const ef = newGoalType === 'weekly' ? weekKey() : todayKey();
     goals.push({ id: 'g_' + Date.now(), title: ti, description: de, category: ca, type: newGoalType, effectiveFrom: ef, deletedAt: null, weeklyTarget: newGoalType === 'weekly' ? (wt || 1) : null });
   }
-  saveLS('goals', goals); closeGoalModal();
-  dailyData = loadLS('daily-' + todayKey()); weeklyData = normWD(weekKey());
-  renderTrainingGoals(); buildWeekstrip(); renderTrainCalendar();
+  await saveLS('goals', goals); closeGoalModal();
+  dailyData = await loadLS('daily-' + todayKey(), {});
+  weeklyData = await normWD(weekKey());
+  await renderTrainingGoals(); await buildWeekstrip(); await renderTrainCalendar();
 }
-function deleteGoal() {
+async function deleteGoal() {
   if (!editGoalId) return;
   const g = goals.find(x => x.id === editGoalId);
   if (g) g.deletedAt = g.type === 'weekly' ? weekKey() : todayKey();
-  saveLS('goals', goals); closeGoalModal();
-  renderTrainingGoals(); buildWeekstrip(); renderTrainCalendar();
+  await saveLS('goals', goals); closeGoalModal();
+  await renderTrainingGoals(); await buildWeekstrip(); await renderTrainCalendar();
 }
 
-let ernaehrung = loadLS('ernaehrung', {}); // { "YYYY-MM-DD": "gruen"|"orange"|"rot" }
+let ernaehrung;
 let calViewYear  = new Date().getFullYear();
 let calViewMonth = new Date().getMonth(); // 0-indexed
 
-function rateToday(color) {
+async function rateToday(color) {
   const key = todayKey();
   if (ernaehrung[key] === color) {
     // toggle off
@@ -1471,7 +1601,7 @@ function rateToday(color) {
   } else {
     ernaehrung[key] = color;
   }
-  saveLS('ernaehrung', ernaehrung);
+  await saveLS('ernaehrung', ernaehrung);
   renderErnaehrung();
 }
 
@@ -1555,7 +1685,7 @@ function renderCalendar() {
   grid.innerHTML = html;
 }
 
-function calDayClick(dateKey) {
+async function calDayClick(dateKey) {
   const today = todayKey();
   if (dateKey > today) return;
   // Cycle through colors: none → gruen → orange → rot → none
@@ -1567,7 +1697,7 @@ function calDayClick(dateKey) {
   } else {
     ernaehrung[dateKey] = cycle[nextIdx];
   }
-  saveLS('ernaehrung', ernaehrung);
+  await saveLS('ernaehrung', ernaehrung);
   renderErnaehrung();
 }
 
@@ -1729,7 +1859,7 @@ function renderCoach() {
   if (tipEl) tipEl.textContent = tip;
 }
 
-let isLight = loadLS('theme', false) === true || loadLS('theme', false) === 'true';
+let isLight;
 
 function applyTheme() {
   if (isLight) {
@@ -1741,9 +1871,9 @@ function applyTheme() {
   }
 }
 
-function toggleTheme() {
+async function toggleTheme() {
   isLight = !isLight;
-  saveLS('theme', isLight);
+  await saveLS('theme', isLight);
   applyTheme();
 }
 
@@ -1903,12 +2033,12 @@ function openWeightModal() {
 function closeWeightModal() {
   document.getElementById('weightModal').classList.remove('open');
 }
-function saveWeight() {
+async function saveWeight() {
   const raw = document.getElementById('weightInput').value.replace(',','.');
   const val = parseFloat(raw);
   if (isNaN(val)) return;
   weights[todayKey()] = val;
-  saveLS('weights', weights);
+  await saveLS('weights', weights);
   closeWeightModal();
   renderMilestones();
 }
@@ -1916,31 +2046,41 @@ document.getElementById('weightInput').addEventListener('keydown', e => { if(e.k
 document.getElementById('weightModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeWeightModal(); });
 
 
-function showTab(name, btn) {
+async function showTab(name, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
   btn.classList.add('active');
   if (name === 'ernaehrung') { renderErnaehrung(); renderCoach(); }
-  if (name === 'training') { renderTrainingGoals(); buildWeekstrip(); renderTrainCalendar(); }
+  if (name === 'training') { await renderTrainingGoals(); await buildWeekstrip(); await renderTrainCalendar(); }
 }
 
 
 
-function init() {
+async function init() {
+  await initStorage();
+  weights = await loadLS('weights', {});
+  goals = await loadLS('goals', null);
+  if (goals === null) { goals = []; await saveLS('goals', goals); }
+  await normalizeGoals();
+  dailyData = await loadLS('daily-' + todayKey(), {});
+  weeklyData = await normWD(weekKey());
+  ernaehrung = await loadLS('ernaehrung', {});
+  isLight = (await loadLS('theme', false)) === true || (await loadLS('theme', false)) === 'true';
+
   const yesterday = (() => { const d = new Date(); d.setDate(d.getDate()-1); return d.toISOString().slice(0,10); })();
-  if (weights[yesterday] !== undefined) { delete weights[yesterday]; saveLS('weights', weights); }
+  if (weights[yesterday] !== undefined) { delete weights[yesterday]; await saveLS('weights', weights); }
   const today = todayKey();
-  if (!weights[today]) { weights[today] = 81.3; saveLS('weights', weights); }
+  if (!weights[today]) { weights[today] = 81.3; await saveLS('weights', weights); }
   document.getElementById('todayDate').textContent =
     new Date().toLocaleDateString('de-AT', {weekday:'long', day:'numeric', month:'long'});
   applyTheme();
-  initCommitment();
-  buildWeekstrip();
-  renderTrainingGoals();
+  await initCommitment();
+  await buildWeekstrip();
+  await renderTrainingGoals();
   renderMilestones();
   renderErnaehrung();
-  renderTrainCalendar();
+  await renderTrainCalendar();
   renderCoach();
 }
 init();
