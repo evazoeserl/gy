@@ -1068,7 +1068,6 @@ function renderDailySection() {
   const active = getActiveGoals(todayKey(), 'daily');
   if (active.length === 0) { wrap.innerHTML = ''; updDailyProg(0, 0); return; }
   let h = '<div class="sec-head"><span class="emoji">⚡</span><div><div class="title">Tagesroutine</div><div class="sub">Täglich erledigen</div></div></div>';
-  h += '<div class="sec-head"><span class="emoji">⚡</span><div><div class="title">Tagesroutine</div><div class="sub">Täglich erledigen</div></div></div>';
   active.forEach(g => {
     const done = !!dailyData[g.id], cl = CATEGORIES[g.category].color;
     h += `<button class="task-btn${done ? ' done-' + cl : ''}" onclick="toggleDailyGoal('${g.id}')">`
@@ -1414,7 +1413,14 @@ function openGoalModal(type, goalId) {
   setTimeout(() => document.getElementById('gmTitle').focus(), 100);
 }
 function closeGoalModal() { document.getElementById('goalModal').classList.remove('open'); editGoalId = null; }
-document.getElementById('goalModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeGoalModal(); });
+document.getElementById('goalModal').addEventListener('click', e => {
+  if (e.target !== e.currentTarget) return;
+  try {
+    const sel = window.getSelection ? window.getSelection().toString() : '';
+    if (sel && sel.length > 0) return; // keep modal open if user is selecting text
+  } catch (err) { }
+  closeGoalModal();
+});
 function selGoalType(t) {
   newGoalType = t;
   document.getElementById('gmTypeDaily').className = 'gm-type-btn' + (t === 'daily' ? ' sel' : '');
