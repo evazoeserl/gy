@@ -707,6 +707,14 @@
   .commit-textarea::placeholder{color:var(--text-muted);opacity:.7;font-style:italic}
   .commit-charcount{font-size:10px;color:var(--text-muted);text-align:right;margin-top:4px;opacity:.6}
 
+
+.sub-tabs{display:flex;gap:4px;margin-bottom:16px;background:var(--surface2);border-radius:12px;padding:4px;border:1px solid var(--border2)}
+.sub-tab{flex:1;padding:9px 4px;border-radius:9px;font-size:13px;font-weight:500;color:var(--pill-inactive);text-align:center;transition:all .2s;cursor:pointer;border:none;background:none;font-family:inherit}
+.sub-tab.active{background:rgba(192,132,252,.18);color:#d8b4fe;font-weight:700}
+body.light .sub-tab.active{background:rgba(109,40,217,.1);color:#6d28d9}
+.sub-tab-content{display:none;animation:fadeUp .25s ease both}
+.sub-tab-content.active{display:block}
+.goal-add-top{display:flex;justify-content:flex-end;margin-bottom:12px}
 </style>
 </head>
 <body>
@@ -739,7 +747,7 @@
     <!-- Commitment Section -->
     <div class="commit-card" id="commitCard">
       <div class="commit-header" onclick="toggleCommitment()">
-        <div class="commit-title">🔥 Mein Commitment</div>
+        <div class="commit-title">🔥 Meine Vision - mein Commitment</div>
         <button class="commit-toggle" id="commitToggle">▾</button>
       </div>
       <div class="commit-body open" id="commitBody">
@@ -774,12 +782,21 @@
         <div class="dual-prog-hint" id="weekly-hint">Los geht's!</div>
       </div>
     </div>
-    <div class="weekstrip" id="weekstrip"></div>
-    <div id="daily-section-wrap"></div>
-    <div id="weekly-section-wrap"></div>
-    <div id="goals-empty-state"></div>
-    <button class="goal-add-btn" id="goal-add-main" onclick="openGoalModal()">＋ Ziel hinzufügen</button>
-    <div style="margin-top:24px">
+    <div class="sub-tabs">
+     <button class="sub-tab active" id="subtab-btn-daily" onclick="showSubTab('daily')">⚡ Täglich</button>
+     <button class="sub-tab" id="subtab-btn-weekly" onclick="showSubTab('weekly')">🔵 Wöchentlich</button>
+    </div>
+    <div id="subtab-daily" class="sub-tab-content active">
+     <div class="goal-add-top"><button class="goal-add-btn" onclick="openGoalModal('daily')">＋ Tagesziel hinzufügen</button></div>
+     <div class="weekstrip" id="weekstrip"></div>
+     <div id="daily-section-wrap"></div>
+     <div id="daily-empty-state"></div>
+    </div>
+    <div id="subtab-weekly" class="sub-tab-content">
+     <div class="goal-add-top"><button class="goal-add-btn" onclick="openGoalModal('weekly')">＋ Wochenziel hinzufügen</button></div>
+     <div id="weekly-section-wrap"></div>
+     <div id="weekly-empty-state"></div>
+     <div style="margin-top:24px">
       <div class="training-section-header"><span class="training-section-badge" style="background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.25)">📅 Rückblick</span></div>
       <div class="cal-nav" style="margin-top:12px">
         <button class="cal-nav-btn" onclick="trainCalPrev()">‹</button>
@@ -789,6 +806,7 @@
       <div class="cal-grid" id="train-cal-grid"></div>
       <div class="cal-legend"><div style="width:100%;font-weight:800;opacity:.85;margin-bottom:4px">Tagesziele</div><div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#34d399;margin-right:4px;vertical-align:middle"></span> Alle erreicht</div><div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#fbbf24;margin-right:4px;vertical-align:middle"></span> Teilweise</div><div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:rgba(239,68,68,.7);margin-right:4px;vertical-align:middle"></span> Nichts</div><div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--surface3);border:1px solid var(--border3);margin-right:4px;vertical-align:middle"></span> Kein Eintrag</div><div style="width:100%;height:1px;background:var(--border2);margin:8px 0"></div><div style="width:100%;font-weight:800;opacity:.85;margin-bottom:4px">Wochenziele</div><div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(52,211,153,.35);border:2px solid rgba(52,211,153,.65);margin-right:4px;vertical-align:middle"></span> Alle erreicht</div><div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(251,191,36,.35);border:2px solid rgba(251,191,36,.65);margin-right:4px;vertical-align:middle"></span> Teilweise</div><div class="cal-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(239,68,68,.32);border:2px solid rgba(239,68,68,.65);margin-right:4px;vertical-align:middle"></span> Nichts</div><div class="cal-legend-item" style="margin-top:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(56,189,248,.10);border:2px solid rgba(56,189,248,.45);margin-right:4px;vertical-align:middle"></span> <strong>W</strong> = Wochenstatus</div></div>
       <div id="train-cal-stats" class="cal-stats"></div>
+    </div>
     </div>
   </div>
 
@@ -974,6 +992,13 @@ function toggleCommitment() {
   if (isOpen) { body.classList.remove('open'); toggle.textContent = '▸'; localStorage.setItem('commitCollapsed','true'); }
   else { body.classList.add('open'); toggle.textContent = '▾'; localStorage.setItem('commitCollapsed','false'); }
 }
+function showSubTab(name) {
+ document.querySelectorAll('.sub-tab-content').forEach(el => el.classList.remove('active'));
+ document.querySelectorAll('.sub-tab').forEach(el => el.classList.remove('active'));
+ document.getElementById('subtab-' + name).classList.add('active');
+ document.getElementById('subtab-btn-' + name).classList.add('active');
+}
+
 
 
 
@@ -1030,16 +1055,19 @@ function renderTrainingGoals() {
   renderDailySection(); renderWeeklySection();
   const aD = getActiveGoals(todayKey(), 'daily');
   const aW = getActiveGoals(weekKey(), 'weekly');
-  const emptyEl = document.getElementById('goals-empty-state');
-  if (aD.length === 0 && aW.length === 0) { emptyEl.innerHTML = '<div class="empty-state"><div class="empty-emoji">📋</div><div class="empty-text">Noch keine Ziele eingetragen.<br>Leg jetzt dein erstes Ziel fest!</div></div>'; }
-  else { emptyEl.innerHTML = ''; }
+  const dailyEmpty = document.getElementById('daily-empty-state');
+  const weeklyEmpty = document.getElementById('weekly-empty-state');
+  if (aD.length === 0) { dailyEmpty.innerHTML = '<div class="empty-state"><div class="empty-emoji">📋</div><div class="empty-text">Noch keine Tagesziele.<br>Leg jetzt dein erstes Tagesziel fest!</div></div>'; }
+  else { dailyEmpty.innerHTML = ''; }
+  if (aW.length === 0) { weeklyEmpty.innerHTML = '<div class="empty-state"><div class="empty-emoji">📋</div><div class="empty-text">Noch keine Wochenziele.<br>Leg jetzt dein erstes Wochenziel fest!</div></div>'; }
+  else { weeklyEmpty.innerHTML = ''; }
 }
 
 function renderDailySection() {
   const wrap = document.getElementById('daily-section-wrap');
   const active = getActiveGoals(todayKey(), 'daily');
   if (active.length === 0) { wrap.innerHTML = ''; updDailyProg(0, 0); return; }
-  let h = '<div class="training-section-header"><span class="training-section-badge daily-badge">Täglich</span></div>';
+  let h = '<div class="sec-head"><span class="emoji">⚡</span><div><div class="title">Tagesroutine</div><div class="sub">Täglich erledigen</div></div></div>';
   h += '<div class="sec-head"><span class="emoji">⚡</span><div><div class="title">Tagesroutine</div><div class="sub">Täglich erledigen</div></div></div>';
   active.forEach(g => {
     const done = !!dailyData[g.id], cl = CATEGORIES[g.category].color;
@@ -1083,7 +1111,7 @@ function renderWeeklySection() {
   if (active.length === 0) { wrap.innerHTML = ''; updWeeklyProg(0, 0); return; }
   const groups = {};
   active.forEach(g => (groups[g.category] = groups[g.category] || []).push(g));
-  let h = '<div class="training-section-header" style="margin-top:24px"><span class="training-section-badge weekly-badge">Wöchentlich</span></div>';
+  let h = '';
   let dS = 0, tS = 0;
   CAT_ORDER.forEach(cat => {
     if (!groups[cat]) return;
