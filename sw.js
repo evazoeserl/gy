@@ -1,8 +1,10 @@
-const CACHE = 'greatyou-v4';
+const CACHE = 'greatyou-v6';
 const ASSETS = [
   '/gy/',
   '/gy/index.html',
   '/gy/manifest.json',
+  '/gy/css/styles.css',
+  '/gy/js/app.js',
   'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=Cormorant+Garamond:wght@700&display=swap'
 ];
 

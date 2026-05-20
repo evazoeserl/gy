@@ -153,6 +153,11 @@ function getDateKeyForWeekday(weekdayI, refMon) {
 }
 const WEEKDAYS = ['Mo','Di','Mi','Do','Fr','Sa','So'];
 let weights;
+let weightSettings = { height: 165, goalDate: '2026-12-15' };
+let weightChartEntries = [];
+let weightQuickAdd = null;
+const DEFAULT_WEIGHT_HEIGHT = 165;
+const DEFAULT_WEIGHT_GOAL_DATE = '2026-12-15';
 
 // Commitment functions
 async function initCommitment() {
@@ -966,6 +971,145 @@ function getSortedWeightEntries() {
     .sort((a, b) => a.date.localeCompare(b.date));
 }
 
+function parseDateKey(key) {
+  return new Date(key + 'T12:00:00');
+}
+function diffDays(from, to) {
+  const diff = to.getTime() - from.getTime();
+  return Math.round(diff / (1000 * 60 * 60 * 24));
+}
+function addDays(date, count) {
+  const result = new Date(date);
+  result.setDate(result.getDate() + count);
+  return result;
+}
+function formatDayMonthYear(date) {
+  return date.toLocaleDateString('de-AT', { day:'numeric', month:'short', year:'numeric' });
+}
+function getBMI(weight, heightCm) {
+  if (!weight || !heightCm) return null;
+  const meters = heightCm / 100;
+  return weight / (meters * meters);
+}
+function getBMICategory(bmi) {
+  if (bmi === null) return '–';
+  if (bmi < 18.5) return 'Untergewicht';
+  if (bmi < 25) return 'Normalgewicht';
+  if (bmi < 30) return 'Übergewicht';
+  return 'Adipositas';
+}
+function getTrend(entries) {
+  if (entries.length < 2) return null;
+  const first = entries[0];
+  const last = entries[entries.length - 1];
+  const days = diffDays(parseDateKey(first.date), parseDateKey(last.date));
+  if (days <= 0) return null;
+  const totalLoss = first.weight - last.weight;
+  const daily = totalLoss / days;
+  return {
+    daily,
+    weekly: daily * 7,
+    monthly: daily * 30,
+    days,
+    totalLoss,
+  };
+}
+function getForecastDate(current, target, trend) {
+  if (!trend || trend.daily <= 0) return null;
+  const remaining = current - target;
+  if (remaining <= 0) return new Date();
+  const days = Math.round(remaining / trend.daily);
+  if (days <= 0) return new Date();
+  return addDays(new Date(), days);
+}
+function renderWeightSettings() {
+  const section = document.getElementById('weight-settings-section');
+  if (!section) return;
+  section.innerHTML = `<div class="weight-settings-card">
+      <div class="weight-settings-block">
+        <div class="weight-settings-label">Körpergröße</div>
+        <input id="weightHeightInput" class="weight-settings-input" type="number" min="110" max="240" step="1" value="${weightSettings.height}" autocomplete="off">
+        <div class="weight-summary-sub">Für BMI &amp; Zielprognose</div>
+      </div>
+      <div class="weight-settings-block">
+        <div class="weight-settings-label">Zieldatum</div>
+        <input id="weightGoalDateInput" class="weight-settings-input" type="date" min="${todayKey()}" value="${weightSettings.goalDate}" autocomplete="off">
+        <div class="weight-summary-sub">Bis wann möchtest du dein Ziel erreichen?</div>
+      </div>
+      <div class="weight-settings-block" style="grid-column: span 2; display:flex; flex-direction:column; gap:10px; justify-content:flex-end;">
+        <button class="weight-quick-add-button save" onclick="saveWeightSettings()">Einstellungen speichern</button>
+      </div>
+    </div>`;
+}
+function renderWeightAnalytics() {
+  const section = document.getElementById('weight-analytics-section');
+  if (!section) return;
+  const entries = getSortedWeightEntries();
+  if (!entries.length) {
+    section.innerHTML = `<div class="weight-chart-card">
+      <div class="weight-chart-title">Analytics</div>
+      <div style="font-size:13px;color:var(--text-muted);">Trage Gewicht ein, um BMI, Tempo und Prognosen zu sehen.</div>
+    </div>`;
+    return;
+  }
+  const first = entries[0].weight;
+  const last = entries[entries.length - 1].weight;
+  const trend = getTrend(entries);
+  const bmi = getBMI(last, weightSettings.height);
+  const forecastDate = getForecastDate(last, END_WEIGHT, trend);
+  const remaining = +(last - END_WEIGHT).toFixed(1);
+  const goalDate = parseDateKey(weightSettings.goalDate);
+  const daysToGoal = diffDays(new Date(), goalDate);
+  const monthsToGoal = daysToGoal > 0 ? daysToGoal / 30 : 0;
+  const requiredPerMonth = monthsToGoal > 0 ? +(remaining / monthsToGoal).toFixed(1) : null;
+  section.innerHTML = `<div class="weight-analytics-grid">
+      <div class="weight-analytics-card">
+        <div class="weight-analytics-label">BMI</div>
+        <div class="weight-analytics-value">${bmi ? bmi.toFixed(1) : '–'}</div>
+        <div class="weight-analytics-sub">${bmi ? getBMICategory(bmi) : 'Körpergröße fehlt'}</div>
+      </div>
+      <div class="weight-analytics-card">
+        <div class="weight-analytics-label">Tempo</div>
+        <div class="weight-analytics-value">${trend ? `${Math.abs(trend.weekly).toFixed(1)} kg/Woche` : '–'}</div>
+        <div class="weight-analytics-sub">${trend ? `durchschnittlich über ${trend.days} Tage` : 'Mehr als ein Eintrag nötig'}</div>
+      </div>
+      <div class="weight-analytics-card">
+        <div class="weight-analytics-label">Prognose</div>
+        <div class="weight-analytics-value">${forecastDate ? formatDayMonthYear(forecastDate) : 'Keine Prognose'}</div>
+        <div class="weight-analytics-sub">${forecastDate ? 'bei aktuellem Tempo' : 'Trend nicht fallend'}</div>
+      </div>
+      <div class="weight-analytics-card">
+        <div class="weight-analytics-label">Monatsziel</div>
+        <div class="weight-analytics-value">${requiredPerMonth !== null ? `${Math.abs(requiredPerMonth).toFixed(1)} kg` : '–'}</div>
+        <div class="weight-analytics-sub">${monthsToGoal > 0 ? `bis ${formatDayMonthYear(goalDate)}` : 'Ungültiges Ziel-Datum'}</div>
+      </div>
+    </div>`;
+}
+function renderWeightQuickAdd() {
+  const section = document.getElementById('weight-quick-add-section');
+  if (!section) return;
+  section.innerHTML = `<div class="weight-quick-add-card">
+      <div>
+        <div class="weight-summary-label">Schnelleingabe</div>
+        <div class="weight-quick-add-text">Tippe auf das Diagramm oder nutze die Schaltfläche, um dein heutiges Gewicht schnell zu erfassen.</div>
+      </div>
+      <button class="weight-quick-add-button save" onclick="openWeightModal()">Heute eintragen</button>
+    </div>`;
+}
+
+async function saveWeightSettings() {
+  const height = parseInt(document.getElementById('weightHeightInput').value, 10);
+  const goalDate = document.getElementById('weightGoalDateInput').value;
+  if (height >= 110 && height <= 240) {
+    weightSettings.height = height;
+  }
+  if (goalDate) {
+    weightSettings.goalDate = goalDate;
+  }
+  await saveLS('weightSettings', weightSettings);
+  renderMilestones();
+}
+
 function renderWeightOverview() {
   const section = document.getElementById('weight-summary');
   if (!section) return;
@@ -988,8 +1132,9 @@ function renderWeightOverview() {
   const pct = start === END_WEIGHT ? 100 : Math.min(100, Math.max(0, ((start - current) / (start - END_WEIGHT)) * 100));
   const displayPct = Math.round(pct);
 
+  const goalDisplay = formatDayMonthYear(parseDateKey(weightSettings.goalDate));
   document.getElementById('weightGoalValue').textContent = `${start.toFixed(1)} → ${END_WEIGHT.toFixed(1)} kg`;
-  document.getElementById('weightGoalHint').textContent = `Aktuell ${current.toFixed(1)} kg · ${displayPct}% zum Ziel`;
+  document.getElementById('weightGoalHint').textContent = `Aktuell ${current.toFixed(1)} kg · ${displayPct}% zum Ziel · bis ${goalDisplay}`;
 
   section.innerHTML = `
     <div class="weight-summary-grid">
@@ -1044,6 +1189,61 @@ function renderWeightLog() {
       <div class="weight-log-diff ${diffClass}">${diffText}</div>
     </div>`;
   }).join('');
+}
+
+function renderWeightChart() {
+  const section = document.getElementById('weight-chart-section');
+  if (!section) return;
+  const entries = getSortedWeightEntries();
+  if (entries.length < 2) {
+    section.innerHTML = `<div class="weight-chart-card">
+      <div class="weight-chart-title">Gewichtsverlauf</div>
+      <div style="font-size:13px;color:var(--text-muted);">Mindestens 2 Einträge erforderlich, um das Diagramm anzuzeigen.</div>
+    </div>`;
+    return;
+  }
+
+  const values = entries.map(e => e.weight);
+  const minW = Math.min(...values) - 1;
+  const maxW = Math.max(...values) + 1;
+  const len = entries.length;
+  const range = maxW - minW || 1;
+  const points = entries.map((entry, idx) => {
+    const x = 16 + (idx / (len - 1)) * 100;
+    const y = 100 - ((entry.weight - minW) / range) * 80;
+    return `${x},${y}`;
+  }).join(' ');
+
+  const firstWeight = entries[0].weight;
+  const lastWeight = entries[len - 1].weight;
+  const trendStartY = 100 - ((firstWeight - minW) / (maxW - minW)) * 80;
+  const trendEndY = 100 - ((lastWeight - minW) / (maxW - minW)) * 80;
+
+  section.innerHTML = `<div class="weight-chart-card weight-chart-clickable" onclick="openWeightModal()">
+    <div class="weight-chart-title">Gewichtsverlauf</div>
+    <div class="weight-summary-sub" style="margin-bottom:10px;">Tippe auf das Diagramm, um schnell einen Eintrag hinzuzufügen.</div>
+    <svg class="weight-chart-svg" viewBox="0 0 120 120" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="weightFlow" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
+        </linearGradient>
+      </defs>
+      <path d="M${points} L116,100 L16,100 Z" fill="url(#weightFlow)" />
+      <line x1="16" y1="${trendStartY}" x2="116" y2="${trendEndY}" stroke="#a5b4fc" stroke-width="1" stroke-dasharray="4 3" />
+      <polyline points="${points}" fill="none" stroke="#38bdf8" stroke-width="2.2" />
+      ${entries.map((entry, idx) => {
+        const x = 16 + (idx / (len - 1)) * 100;
+        const y = 100 - ((entry.weight - minW) / (maxW - minW)) * 80;
+        return `<circle cx="${x}" cy="${y}" r="2.5" fill="#fff" stroke="#38bdf8" stroke-width="1.2" />`;
+      }).join('')}
+      ${entries.map((entry, idx) => {
+        const x = 16 + (idx / (len - 1)) * 100;
+        const y = 100 - ((entry.weight - minW) / (maxW - minW)) * 80;
+        return `<text x="${x}" y="${y - 6}" text-anchor="middle" font-size="6.5" fill="#a5b4fc">${entry.weight.toFixed(1)}</text>`;
+      }).join('')}
+    </svg>
+  </div>`;
 }
 
 function getLastWeight() {
@@ -1168,6 +1368,10 @@ function renderMilestones() {
   </div>`;
 
   renderWeightOverview();
+  renderWeightChart();
+  renderWeightSettings();
+  renderWeightAnalytics();
+  renderWeightQuickAdd();
   renderWeightLog();
 }
 
@@ -1209,6 +1413,14 @@ async function showTab(name, btn) {
 async function init() {
   await initStorage();
   weights = await loadLS('weights', {});
+  weightSettings = await loadLS('weightSettings', weightSettings);
+  if (!weightSettings || !weightSettings.height || !weightSettings.goalDate) {
+    weightSettings = {
+      height: weightSettings?.height || DEFAULT_WEIGHT_HEIGHT,
+      goalDate: weightSettings?.goalDate || DEFAULT_WEIGHT_GOAL_DATE,
+    };
+    await saveLS('weightSettings', weightSettings);
+  }
   goals = await loadLS('goals', null);
   if (goals === null) { goals = []; await saveLS('goals', goals); }
   await normalizeGoals();
