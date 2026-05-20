@@ -153,11 +153,14 @@ function getDateKeyForWeekday(weekdayI, refMon) {
 }
 const WEEKDAYS = ['Mo','Di','Mi','Do','Fr','Sa','So'];
 let weights;
-let weightSettings = { height: 165, goalDate: '2026-12-15' };
+let weightSettings = { height: 165, goalDate: '2026-12-15', startDate: null, goalWeight: 70.8 };
 let weightChartEntries = [];
 let weightQuickAdd = null;
+let weightModalMode = 'weight';
 const DEFAULT_WEIGHT_HEIGHT = 165;
 const DEFAULT_WEIGHT_GOAL_DATE = '2026-12-15';
+const DEFAULT_GOAL_WEIGHT = 70.8;
+const DEFAULT_START_WEIGHT = 81.3;
 
 // Commitment functions
 async function initCommitment() {
@@ -942,14 +945,23 @@ const MILESTONE_DATES = [
   '2026-05-15','2026-06-15','2026-07-15','2026-08-15',
   '2026-09-15','2026-10-15','2026-11-15','2026-12-15'
 ];
-const START_WEIGHT = 81.3;
-const END_WEIGHT   = 70.8;
 const STEPS = MILESTONE_DATES.length - 1; // 7 steps
-const STEP_SIZE = +((START_WEIGHT - END_WEIGHT) / STEPS).toFixed(4); // ~1.5
 
-// Pre-computed target for each milestone index
+function getGoalWeight() {
+  return weightSettings.goalWeight !== undefined ? weightSettings.goalWeight : DEFAULT_GOAL_WEIGHT;
+}
+
+function getStartWeight() {
+  const entries = getSortedWeightEntries();
+  const startEntry = getStartEntry(entries);
+  return startEntry ? startEntry.weight : DEFAULT_START_WEIGHT;
+}
+
 function getMilestoneTarget(idx) {
-  return +(START_WEIGHT - idx * STEP_SIZE).toFixed(1);
+  const startWeight = getStartWeight();
+  const goalWeight = getGoalWeight();
+  const stepSize = (startWeight - goalWeight) / STEPS;
+  return +(startWeight - idx * stepSize).toFixed(1);
 }
 
 function getWeightOnOrBefore(dateKey) {
@@ -969,6 +981,17 @@ function getSortedWeightEntries() {
   return Object.entries(weights)
     .map(([date, weight]) => ({ date, weight }))
     .sort((a, b) => a.date.localeCompare(b.date));
+}
+
+function getStartEntry(entries) {
+  if (!entries.length) return null;
+  if (weightSettings.startDate) {
+    const startWeight = weights[weightSettings.startDate];
+    if (startWeight !== undefined) {
+      return { date: weightSettings.startDate, weight: startWeight };
+    }
+  }
+  return entries[0];
 }
 
 function parseDateKey(key) {
@@ -1123,14 +1146,16 @@ function renderWeightOverview() {
     return;
   }
 
-  const first = entries[0];
+  const startEntry = getStartEntry(entries);
+  if (!startEntry) return;
   const last = entries[entries.length - 1];
-  const start = first.weight;
+  const start = startEntry.weight;
   const current = last.weight;
   const remaining = +(current - END_WEIGHT).toFixed(1);
   const change = +(current - start).toFixed(1);
   const pct = start === END_WEIGHT ? 100 : Math.min(100, Math.max(0, ((start - current) / (start - END_WEIGHT)) * 100));
   const displayPct = Math.round(pct);
+  const startLabel = weightSettings.startDate ? formatDayMonthYear(parseDateKey(startEntry.date)) : 'Erster Eintrag';
 
   const goalDisplay = formatDayMonthYear(parseDateKey(weightSettings.goalDate));
   document.getElementById('weightGoalValue').textContent = `${start.toFixed(1)} → ${END_WEIGHT.toFixed(1)} kg`;
@@ -1138,10 +1163,10 @@ function renderWeightOverview() {
 
   section.innerHTML = `
     <div class="weight-summary-grid">
-      <div class="weight-summary-card">
+      <div class="weight-summary-card" style="cursor:pointer;" onclick="openWeightModal(todayKey(),'start')">
         <div class="weight-summary-label">Start</div>
         <div class="weight-summary-value">${start.toFixed(1)} kg</div>
-        <div class="weight-summary-sub">Erster Eintrag</div>
+        <div class="weight-summary-sub">${weightSettings.startDate ? `Seit ${startLabel}` : 'Neuen Start festlegen'}</div>
       </div>
       <div class="weight-summary-card">
         <div class="weight-summary-label">Aktuell</div>
@@ -1375,11 +1400,14 @@ function renderMilestones() {
   renderWeightLog();
 }
 
-function openWeightModal() {
+function openWeightModal(dateKey = todayKey(), mode = 'weight') {
+  weightModalMode = mode;
   const today = todayKey();
-  document.getElementById('modalMonthLabel').textContent =
-    new Date(today + 'T12:00:00').toLocaleDateString('de-AT',{day:'numeric', month:'long', year:'numeric'});
-  document.getElementById('weightInput').value = weights[today] || '';
+  const dateInput = document.getElementById('weightDateInput');
+  document.getElementById('modalMonthLabel').textContent = mode === 'start' ? 'Startdatum festlegen' : 'Datum auswählen';
+  dateInput.value = dateKey;
+  dateInput.max = today;
+  document.getElementById('weightInput').value = weights[dateKey] || '';
   document.getElementById('weightModal').classList.add('open');
   setTimeout(()=>document.getElementById('weightInput').focus(),100);
 }
@@ -1387,15 +1415,32 @@ function closeWeightModal() {
   document.getElementById('weightModal').classList.remove('open');
 }
 async function saveWeight() {
+  const dateValue = document.getElementById('weightDateInput').value || todayKey();
   const raw = document.getElementById('weightInput').value.replace(',','.');
   const val = parseFloat(raw);
-  if (isNaN(val)) return;
-  weights[todayKey()] = val;
+  if (!dateValue || isNaN(val)) return;
+  weights[dateValue] = val;
   await saveLS('weights', weights);
+  if (weightModalMode === 'start') {
+    weightSettings.startDate = dateValue;
+    await saveLS('weightSettings', weightSettings);
+  } else if (weightSettings.startDate && weights[weightSettings.startDate] === undefined) {
+    weightSettings.startDate = null;
+    await saveLS('weightSettings', weightSettings);
+  }
   closeWeightModal();
   renderMilestones();
+  renderWeightOverview();
+  renderWeightChart();
+  renderWeightAnalytics();
+  renderWeightQuickAdd();
+  renderWeightLog();
 }
 document.getElementById('weightInput').addEventListener('keydown', e => { if(e.key==='Enter') saveWeight(); });
+document.getElementById('weightDateInput').addEventListener('change', () => {
+  const dateValue = document.getElementById('weightDateInput').value || todayKey();
+  document.getElementById('weightInput').value = weights[dateValue] || '';
+});
 document.getElementById('weightModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeWeightModal(); });
 
 
