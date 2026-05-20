@@ -164,9 +164,14 @@
   <!-- ZIEL -->
   <div id="page-ziel" class="page">
     <div class="goal-card">
-      <div class="goal-label">GESAMTZIEL</div>
-      <div class="goal-value">81,3 → 70,8 kg</div>
-      <div class="goal-hint">−1,5 kg/Monat · gemessen am 15. · bis 15. Dezember 2026</div>
+      <div class="goal-label">GEWICHTSPLAN</div>
+      <div class="goal-value" id="weightGoalValue">81,3 → 70,8 kg</div>
+      <div class="goal-hint" id="weightGoalHint">−1,5 kg/Monat · gemessen am 15.</div>
+    </div>
+
+    <div id="weight-summary"></div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
+      <button class="goal-add-btn" onclick="openWeightModal()">Gewicht eintragen</button>
     </div>
 
     <div id="next-goal-section"></div>
@@ -174,14 +179,8 @@
     <div class="section-title">📅 Meilensteine – jeweils am 15.</div>
     <div id="milestone-list" class="milestone-list"></div>
 
-    <div class="plan-box">
-      <div class="plan-title">📋 Dein Gesamtplan</div>
-      <div class="plan-row"><span class="plan-row-emoji">🏋️</span><div><div class="plan-row-freq">Täglich</div><div class="plan-row-desc">3×20 Sit-ups + 3×20 Brustdrücken</div></div></div>
-      <div class="plan-row"><span class="plan-row-emoji">🧘</span><div><div class="plan-row-freq">Täglich</div><div class="plan-row-desc">Visualisierung (5–10 Min.)</div></div></div>
-      <div class="plan-row"><span class="plan-row-emoji">💪</span><div><div class="plan-row-freq">Wöchentlich</div><div class="plan-row-desc">3× Krafttraining à 30 Min.</div></div></div>
-      <div class="plan-row"><span class="plan-row-emoji">🏃</span><div><div class="plan-row-freq">Wöchentlich</div><div class="plan-row-desc">2× Ausdauer (Wandern/Radeln/Laufen)</div></div></div>
-      <div class="plan-row"><span class="plan-row-emoji">⚖️</span><div><div class="plan-row-freq">Monatsziel</div><div class="plan-row-desc">−1,5 kg alle 4 Wochen (gemessen am 15.)</div></div></div>
-    </div>
+    <div class="section-title">📋 Verlauf</div>
+    <div id="weight-log-section"></div>
   </div>
 
 </div><!-- /content -->

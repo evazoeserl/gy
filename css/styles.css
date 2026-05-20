@@ -340,6 +340,76 @@
   .goal-value { font-size: 28px; font-weight: 700; color: var(--text-strong); letter-spacing: -1px; }
   .goal-hint { font-size: 13px; color: #7c5cbf; margin-top: 4px; }
 
+  .weight-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .weight-summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px;
+    text-align: center;
+  }
+  .weight-summary-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .weight-summary-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .weight-summary-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .weight-progress-bar {
+    background: var(--surface2);
+    border: 1px solid var(--border3);
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 16px;
+  }
+  .weight-progress-track {
+    background: rgba(255,255,255,0.04);
+    border-radius: 999px;
+    height: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .weight-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg,#8b5cf6,#38bdf8);
+    border-radius: 999px;
+    transition: width 0.5s ease;
+  }
+  .weight-progress-meta { font-size: 12px; color: var(--text-muted); text-align: right; }
+  .weight-log-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    border-radius: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .weight-log-date { font-size: 12px; color: var(--text-muted); }
+  .weight-log-day { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+  .weight-log-value { font-size: 16px; font-weight: 700; color: var(--text); min-width: 70px; text-align: right; }
+  .weight-log-diff { font-size: 12px; min-width: 60px; text-align: right; }
+  .weight-log-up { color: #fb923c; }
+  .weight-log-down { color: #4ade80; }
+  .weight-log-same { color: #9b7dcc; }
+
   .section-title { font-size: 15px; font-weight: 700; color: var(--text-strong); margin-bottom: 12px; }
 
   .weight-item {

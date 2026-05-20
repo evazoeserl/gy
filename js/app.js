@@ -956,6 +956,96 @@ function getWeightOnOrBefore(dateKey) {
   return best ? weights[best] : null;
 }
 
+function formatWeightDate(dateKey) {
+  return new Date(dateKey + 'T12:00:00').toLocaleDateString('de-AT', { day:'2-digit', month:'short' });
+}
+
+function getSortedWeightEntries() {
+  return Object.entries(weights)
+    .map(([date, weight]) => ({ date, weight }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+
+function renderWeightOverview() {
+  const section = document.getElementById('weight-summary');
+  if (!section) return;
+  const entries = getSortedWeightEntries();
+  if (!entries.length) {
+    section.innerHTML = `<div class="plan-box" style="padding:16px;display:flex;flex-direction:column;gap:8px;">
+      <div style="font-size:14px;font-weight:700;color:var(--text-strong);">Noch kein Gewicht eingetragen</div>
+      <div style="font-size:13px;color:var(--text-muted);">Trage den ersten Eintrag ein, um deinen Verlauf zu starten.</div>
+      <button class="empty-btn" onclick="openWeightModal()" style="align-self:flex-start;">Eintragen</button>
+    </div>`;
+    return;
+  }
+
+  const first = entries[0];
+  const last = entries[entries.length - 1];
+  const start = first.weight;
+  const current = last.weight;
+  const remaining = +(current - END_WEIGHT).toFixed(1);
+  const change = +(current - start).toFixed(1);
+  const pct = start === END_WEIGHT ? 100 : Math.min(100, Math.max(0, ((start - current) / (start - END_WEIGHT)) * 100));
+  const displayPct = Math.round(pct);
+
+  document.getElementById('weightGoalValue').textContent = `${start.toFixed(1)} → ${END_WEIGHT.toFixed(1)} kg`;
+  document.getElementById('weightGoalHint').textContent = `Aktuell ${current.toFixed(1)} kg · ${displayPct}% zum Ziel`;
+
+  section.innerHTML = `
+    <div class="weight-summary-grid">
+      <div class="weight-summary-card">
+        <div class="weight-summary-label">Start</div>
+        <div class="weight-summary-value">${start.toFixed(1)} kg</div>
+        <div class="weight-summary-sub">Erster Eintrag</div>
+      </div>
+      <div class="weight-summary-card">
+        <div class="weight-summary-label">Aktuell</div>
+        <div class="weight-summary-value">${current.toFixed(1)} kg</div>
+        <div class="weight-summary-sub">Letzter Eintrag</div>
+      </div>
+      <div class="weight-summary-card">
+        <div class="weight-summary-label">Ziel</div>
+        <div class="weight-summary-value">${END_WEIGHT.toFixed(1)} kg</div>
+        <div class="weight-summary-sub">15. jeden Monats</div>
+      </div>
+    </div>
+    <div class="weight-progress-bar">
+      <div class="weight-progress-track">
+        <div class="weight-progress-fill" style="width:${displayPct}%;"></div>
+      </div>
+      <div class="weight-progress-meta">${displayPct}% erreicht · ${remaining > 0 ? `noch ${Math.abs(remaining).toFixed(1)} kg` : 'Ziel erreicht!'}</div>
+    </div>`;
+}
+
+function renderWeightLog() {
+  const log = document.getElementById('weight-log-section');
+  if (!log) return;
+  const entries = getSortedWeightEntries().reverse();
+  if (!entries.length) {
+    log.innerHTML = `<div class="empty-state">
+      <div class="empty-emoji">⚖️</div>
+      <div class="empty-text">Trage dein Startgewicht ein, um zu beginnen</div>
+      <button class="empty-btn" onclick="openWeightModal()">Jetzt eintragen →</button>
+    </div>`;
+    return;
+  }
+
+  log.innerHTML = entries.map((entry, index) => {
+    const prev = entries[index + 1]?.weight ?? null;
+    const diff = prev !== null ? +(entry.weight - prev).toFixed(1) : null;
+    const diffText = diff === null ? '' : `${diff > 0 ? '+' : ''}${diff.toFixed(1)} kg`;
+    const diffClass = diff === null ? '' : diff > 0 ? 'weight-log-up' : diff < 0 ? 'weight-log-down' : 'weight-log-same';
+    return `<div class="weight-log-row">
+      <div>
+        <div class="weight-log-date">${formatWeightDate(entry.date)}</div>
+        <div class="weight-log-day">${weekday(entry.date)}</div>
+      </div>
+      <div class="weight-log-value">${entry.weight.toFixed(1)} kg</div>
+      <div class="weight-log-diff ${diffClass}">${diffText}</div>
+    </div>`;
+  }).join('');
+}
+
 function getLastWeight() {
   const allDates = Object.keys(weights).sort();
   if (!allDates.length) return null;
@@ -1076,6 +1166,9 @@ function renderMilestones() {
     <div class="empty-text">Trage dein Startgewicht ein, um zu beginnen</div>
     <button class="empty-btn" onclick="openWeightModal()">Jetzt eintragen →</button>
   </div>`;
+
+  renderWeightOverview();
+  renderWeightLog();
 }
 
 function openWeightModal() {
